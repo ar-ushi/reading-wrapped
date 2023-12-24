@@ -1,5 +1,6 @@
 <template>
-  <div id="main-page-header">
+<SwitchTheme />
+<div id="main-page-header">
     <h2>Reading Wrapped</h2>
     <h6>Supports Goodreads (for now!)</h6>
     <div class="year-select-dropdown">
@@ -11,14 +12,15 @@
       To get started, kindly copy and paste the URL of your "my books" page on Goodreads.
       You can find it <a href="https://www.goodreads.com/review/list/">here</a>. The URL should have a format similar to: goodreads.com/review/list/###.
     </p>
-    <v-text-field placeholder="www.goodreads.com/review/list/"></v-text-field>
+    <v-text-field persistent-placeholder placeholder="www.goodreads.com/review/list/"></v-text-field>
   </div>
   <div id="wrapped-btn">
-    <button disabled>Wrapped</button>
+    <v-btn disabled>Wrapped</v-btn>
   </div>
 </template>
 
 <script lang="ts">
+import SwitchTheme from '../components/SwitchTheme.vue'
 export default{
   data(){
     return {

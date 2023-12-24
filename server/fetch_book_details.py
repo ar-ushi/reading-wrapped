@@ -28,7 +28,7 @@ class BookDetails():
             self.rows = book_rows
             title=self.format_element('title')
             author= self.format_element('author')
-            page = self.format_element('num_pages', div)
+            page = self.format_element('num_pages', tag='div')
 
             self.store_book_details['title'].append(title)
             self.store_book_details['author'].append(author)
