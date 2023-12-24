@@ -34,8 +34,7 @@ const yearOptions = ref([] as { title: string; value: number }[]);
 const uid = ref('');
 const isBtnDisabled = ref(true);
 const loading = ref(false);
-const fetchBookDetails = () => {
-  setTimeout(async () => {
+const fetchBookDetails = async () => {
   try {
     const response = await fetch(`http://127.0.0.1:5000/wrapped?gr_user_id=${uid.value}&year=${selectedYear.value}`);
     if (response.status === 200){
@@ -45,8 +44,7 @@ const fetchBookDetails = () => {
   } catch (error) {
     console.error('Error Fetching Data:', error)
   }
-}, 120000) //TODO - Figure out what to show for 'Error Fetching Data'
-}
+} //TODO - Figure out what to show for 'Error Fetching Data'
 const generateYearsForWrapped = () => {
   const date = new Date();
   const currMonth: number = date.getMonth();
