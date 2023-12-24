@@ -1,5 +1,5 @@
 <template>
-    <v-chip>{{ isDarkModeOn }}</v-chip>
+    <v-chip>Hello</v-chip>
 </template>
 
 <script lang="ts">

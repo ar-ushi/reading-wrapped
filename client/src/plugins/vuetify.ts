@@ -1,5 +1,6 @@
 import { createVuetify } from 'vuetify'
 import { components, directives } from 'vuetify/dist/vuetify-labs.js';
+import 'vuetify/dist/vuetify.min.css';
 
 
 export const vuetify = createVuetify({

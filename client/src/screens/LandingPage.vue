@@ -1,10 +1,10 @@
 <template>
-<SwitchTheme />
+  <SwitchTheme />
 <div id="main-page-header">
     <h2>Reading Wrapped</h2>
     <h6>Supports Goodreads (for now!)</h6>
     <div class="year-select-dropdown">
-      <v-select class="custom-select" placeholder="Select Year" v-model="selectedYear" :items="yearOptions" :item-props="itemProps"></v-select>
+      <v-select placeholder="Select Year" v-model="selectedYear" :items="yearOptions" :item-props="itemProps"></v-select>
     </div>
   </div>
   <div id="main-page-links">
@@ -19,40 +19,36 @@
   </div>
 </template>
 
-<script lang="ts">
-import SwitchTheme from '../components/SwitchTheme.vue'
-export default{
-  data(){
-    return {
-      selectedYear: 2023,
-      yearOptions: [] as {text: string, value: number}[]
-    };
-  },
-  mounted(){
-    this.generateYearsForWrapped();
-  },
-  methods: {
-    generateYearsForWrapped(){
-      const date : Date = new Date();
-      const currMonth: number = date.getMonth();
-      const currYear : number = (currMonth === 12) ? date.getFullYear() : (date.getFullYear() - 1);
-      const years = [];
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import SwitchTheme from '../components/SwitchTheme.vue';
+const selectedYear = ref(2023);
+const yearOptions = ref([] as { text: string; value: number }[]);
 
-      for (let i = currYear; i>= currYear - 5; i--){
-        years.push({text: i.toString(), value: i});
-      }
+const generateYearsForWrapped = () => {
+  const date = new Date();
+  const currMonth: number = date.getMonth();
+  const currYear: number = currMonth === 12 ? date.getFullYear() : date.getFullYear() - 1;
+  const years = [];
 
-      this.yearOptions = years;
-      this.selectedYear = currYear;
-    },
-    itemProps(item: any){
-      return{
-        title: item.key,
-      }
-    }
+  for (let i = currYear; i >= currYear - 5; i--) {
+    years.push({ text: i.toString(), value: i });
   }
-}
+
+  yearOptions.value = years;
+  selectedYear.value = currYear;
+};
+
+const itemProps = (item: any) => {
+  return {
+    title: item.key,
+  };
+};
+
+onMounted(generateYearsForWrapped);
 </script>
+
+
 
 <style lang="scss">
 #main-page-header{
