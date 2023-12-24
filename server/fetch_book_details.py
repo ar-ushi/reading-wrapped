@@ -5,7 +5,7 @@ class BookDetails():
     def __init__(self, userid, year):
         self.id = userid
         self.year = year
-        self.store_book_details = {'title': [], 'author': [], 'numpage': []}
+        self.store_book_details = {}
         self.rows = []
 
     def get_parsed_html(self):
@@ -30,9 +30,9 @@ class BookDetails():
             author= self.format_element('author')
             page = self.format_element('num_pages', tag='div')
 
-            self.store_book_details['title'].append(title)
-            self.store_book_details['author'].append(author)
-            self.store_book_details['numpage'].append(page)
+            self.store_book_details.setdefault['title', []].append(title)
+            self.store_book_details.setdefault['author', []].append(author)
+            self.store_book_details.setdefault['numpage', []].append(page)
         print(self.store_book_details)
 
     def format_element(self,class_name, tag='a'):

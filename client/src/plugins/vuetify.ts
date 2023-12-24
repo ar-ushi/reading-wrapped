@@ -10,8 +10,8 @@ export const vuetify = createVuetify({
     themes: {
       light: {
         colors: {
-          primary: '#41b883',
-          background: '#35495e',
+          primary: '##6C5CE7',
+          background: '#5c148c',
           error: '#d63031',
           info: '#0984e3',
           secondary: '#fdcb6e',
