@@ -7,7 +7,7 @@ class BookDetails():
     def __init__(self, userid, year):
         self.id = userid
         self.year = year
-        self.store_book_details = {'totalbooksread': 0, 'totalpagesread': 0, 'avgbooklength': 0, 'longestbook': '', 'longestpg': 0, 'shortestbook': '', 'shortestpg':0 }
+        self.store_book_details = {'totalbooksread': 0, 'totalpagesread': 0  }
         self.rows = []
 
     def get_parsed_html(self):
@@ -31,44 +31,41 @@ class BookDetails():
             date_read_rows.append(element.find_parent('tr'))
         #parsing over year()
         self.store_book_details['totalbooksread'] += len(date_read_rows)
-        for book_rows in date_read_rows:
+        for i, book_rows in enumerate(date_read_rows):
             self.rows = book_rows
-            title=self.format_element('title')
-            author= self.format_element('author')
-            page = self.format_element('num_pages', tag='div')
-            rating = self.format_element('rating', tag='div')
+            title=self.format_element('title', tag='a')
+            author= self.format_element('author',tag='a')
+            page = int(re.findall(r'\d+', self.format_element('num_pages'))[0])
+            rating= self.map_rating()
+            avgrating = float(self.format_element('avg_rating'))
+            booklink = 'www.goodreads.com' + book_rows.find_next('td', class_=f'field cover').find('a')['href']
+            bookcover = book_rows.find_next('td', class_=f'field cover').find('img')['src']
 
-            page = int(re.findall(r'\d+', page)[0])
-
-            self.store_book_details.setdefault('title', []).append(title)
-            self.update_count('author', author)
-            self.store_book_details.setdefault('numpage', []).append(page)
-            self.update_count('rating', rating)
+            self.store_book_details[str(i)] = {
+            'title': title,
+            'author': author,
+            'page': page,
+            'rating': rating,
+            'avgrating': avgrating,
+            'booklink': booklink,
+            'bookcover': bookcover
+            }
             self.store_book_details['totalpagesread'] += int(page)
-        self.find_book()
-        self.store_book_details['avgbooklength'] = int(self.store_book_details['totalpagesread']/self.store_book_details['totalbooksread'])
-        print(self.store_book_details)
 
-    def find_book(self):
-        shortest = sys.maxsize
-        longest = 0
-        shortestindex = 0
-        longestindex = 0
-        for i, value in enumerate(self.store_book_details['numpage']):
-            if value < shortest:
-                shortest = value
-                shortestindex = i
-            elif value > longest:
-                longest = value
-                longestindex = i
-        self.store_book_details['longestpg'] = longest
-        self.store_book_details['shortestpg'] = shortest
-        self.store_book_details['longestbook'] = self.store_book_details['title'][longestindex]
-        self.store_book_details['shortestbook'] = self.store_book_details['title'][shortestindex]
+    def map_rating(self):
+        rating_map= {
+            'it was amazing' : 5,
+            'really liked it': 4,
+            'liked it' : 3,
+            'it was ok': 2,
+            'did not like it': 1
+        }
+        str_rating = self.format_element('rating')
+        return rating_map[str_rating]
 
-    def update_count(self, key,value):
+    def update_count(self, key,value, inc = 1):
         self.store_book_details.setdefault((key), {})
-        self.store_book_details[key][value] = self.store_book_details[key].get(value, 0) + 1
+        self.store_book_details[key][value] = self.store_book_details[key].get(value, 0) + inc
     
-    def format_element(self,class_name, tag='a'):
+    def format_element(self,class_name, tag='div'):
         return self.rows.find_next('td', class_=f'field {class_name}').find(tag).text.strip()
