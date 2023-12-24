@@ -7,16 +7,19 @@
   </div>
   <div id="main-page-links">
     <p>
-      To get started, kindly copy and paste the URL of your "my books" page on Goodreads.
-      You can find it <a href="https://www.goodreads.com/review/list/">here</a>. The URL should have a format similar to: goodreads.com/review/list/###.
+      To get started, kindly copy and paste the ID of your account on Goodreads.
+      You can find it <a href="https://www.goodreads.com/review/list/">here</a>.
+      <span class="url-help">
+        The URL should have a format similar to: goodreads.com/review/list/### where ### is the account id.
+      </span>
     </p>
     <div class="input-container">
-      <v-select variant="underlined" placeholder="Select Year" v-model="selectedYear" :items="yearOptions"></v-select>
-      <v-text-field variant="underlined" v-model="url" validate-on="input lazy" :rules=[validateURL] persistent-placeholder placeholder="www.goodreads.com/review/list/"></v-text-field>
+      <v-select variant="underlined" label="Reading Year" v-model="selectedYear" :items="yearOptions"></v-select>
+      <v-text-field variant="underlined" v-model="uid" label="www.goodreads.com/review/list/"></v-text-field>
     </div>
   </div>
   <div id="wrapped-btn">
-    <v-btn :disabled="isBtnDisabled">Wrapped</v-btn>
+    <v-btn :disabled="isBtnDisabled" :loading="loading" @click="fetchBookDetails">Wrapped</v-btn>
   </div>
   </div>
 </template>
@@ -26,14 +29,21 @@ import { onMounted, ref, watch } from 'vue';
 import SwitchTheme from '../components/SwitchTheme.vue';
 const selectedYear = ref(2023);
 const yearOptions = ref([] as { title: string; value: number }[]);
-const url = ref('');
+const uid = ref('');
 const isBtnDisabled = ref(true);
-const validateURL = (value : string) => {
-  if (value.includes('www.goodreads.com/review/list/')){
-    isBtnDisabled.value = false;
-    return true
+const loading = ref(false);
+const fetchBookDetails = () => {
+  setTimeout(async () => {
+  try {
+    const response = await fetch(`http://127.0.0.1:5000/wrapped?gr_user_id=${uid.value}&year=${selectedYear.value}`);
+    if (response.status === 200){
+      loading.value = !loading.value;
+      const data = await response.json();
+    }
+  } catch (error) {
+    console.error('Error Fetching Data:', error)
   }
-  return 'Please enter the expected input for Wrapped'
+}, 120000) //TODO - Figure out what to show for 'Error Fetching Data'
 }
 const generateYearsForWrapped = () => {
   const date = new Date();
@@ -50,9 +60,10 @@ const generateYearsForWrapped = () => {
 };
 
 onMounted(generateYearsForWrapped);
-watch(selectedYear, (newValue, oldValue) => {
-  console.log('Selected Year changed:', newValue);
-});</script>
+watch(uid, (newValue) => {
+  isBtnDisabled.value = newValue.trim() === '';
+});
+</script>
 
 
 
@@ -72,14 +83,18 @@ watch(selectedYear, (newValue, oldValue) => {
   .input-container{
     display: flex;
     justify-content: space-evenly;
-    padding-top: 0.5rem;
+    padding: 1rem 0 1rem 0;
 }
   .v-select{
     max-width: 70px !important;
   }
   .v-text-field{
     max-width: 40%;
-  }
+ }
+ .url-help{
+  font-size: 12px;
+  background-color: lightgray;
+ }
 }
 }
 </style>
