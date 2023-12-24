@@ -12,21 +12,29 @@
     </p>
     <div class="input-container">
       <v-select variant="underlined" placeholder="Select Year" v-model="selectedYear" :items="yearOptions"></v-select>
-      <v-text-field persistent-placeholder placeholder="www.goodreads.com/review/list/" bg-color="transparent"></v-text-field>
+      <v-text-field variant="underlined" v-model="url" validate-on="input lazy" :rules=[validateURL] persistent-placeholder placeholder="www.goodreads.com/review/list/"></v-text-field>
     </div>
   </div>
   <div id="wrapped-btn">
-    <v-btn disabled>Wrapped</v-btn>
+    <v-btn :disabled="isBtnDisabled">Wrapped</v-btn>
   </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import SwitchTheme from '../components/SwitchTheme.vue';
 const selectedYear = ref(2023);
 const yearOptions = ref([] as { title: string; value: number }[]);
-
+const url = ref('');
+const isBtnDisabled = ref(true);
+const validateURL = (value : string) => {
+  if (value.includes('www.goodreads.com/review/list/')){
+    isBtnDisabled.value = false;
+    return true
+  }
+  return 'Please enter the expected input for Wrapped'
+}
 const generateYearsForWrapped = () => {
   const date = new Date();
   const currMonth: number = date.getMonth();
@@ -42,7 +50,9 @@ const generateYearsForWrapped = () => {
 };
 
 onMounted(generateYearsForWrapped);
-</script>
+watch(selectedYear, (newValue, oldValue) => {
+  console.log('Selected Year changed:', newValue);
+});</script>
 
 
 
