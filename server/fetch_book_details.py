@@ -7,7 +7,7 @@ class BookDetails():
     def __init__(self, userid, year):
         self.id = userid
         self.year = year
-        self.store_book_details = {'totalbooksread': 0, 'totalpagesread': 0  }
+        self.store_book_details = {'totalbooksread': 0, 'totalpagesread': 0 , 'username': ''}
         self.rows = []
 
     def get_parsed_html(self):
@@ -25,7 +25,7 @@ class BookDetails():
     def fetch_book_details(self, res):
         soup = BeautifulSoup(res.content, 'html.parser')
         username= (soup.find("title").text.split(chr(8217)))[0]
-        self.store_book_details.setdefault('username', '').append(username)
+        self.store_book_details['username'] = username
         date_read_rows = []
         for element in soup.select(f'.date_read_value:-soup-contains("{self.year}")'):
             month = re.sub("[^a-zA-Z]", "", element.text.strip())
