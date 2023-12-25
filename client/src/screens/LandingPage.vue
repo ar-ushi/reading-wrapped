@@ -20,6 +20,17 @@
   </div>
   <div id="wrapped-btn">
     <v-btn color='primary' :disabled="isBtnDisabled" :loading="loading" @click="fetchBookDetails">Wrapped</v-btn>
+    <v-dialog v-model="loading" width="auto" height="auto" :scrim="false" persistent>
+    <v-card color="primary">
+      <v-card-text>
+        Please be patient as we are parsing your Goodreads Data.This process may take upto 2-3 minutes.
+        <v-progress-linear
+            indeterminate
+            color=white
+          ></v-progress-linear>
+      </v-card-text>
+    </v-card>
+    </v-dialog>
   </div>
   </div>
 </template>
@@ -35,13 +46,15 @@ const isBtnDisabled = ref(true);
 const loading = ref(false);
 const fetchBookDetails = async () => {
   try {
+    loading.value = !loading.value;
     const response = await fetch(`http://127.0.0.1:5000/wrapped?gr_user_id=${uid.value}&year=${selectedYear.value}`);
     if (response.status === 200){
-      loading.value = !loading.value;
       const data = await response.json();
     }
   } catch (error) {
     console.error('Error Fetching Data:', error)
+  } finally{
+    loading.value = false;
   }
 } //TODO - Figure out what to show for 'Error Fetching Data'
 const generateYearsForWrapped = () => {
