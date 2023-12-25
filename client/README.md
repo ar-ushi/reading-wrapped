@@ -8,3 +8,6 @@ most read genre
 shortest and longest -- all from UI
 
 todo - books where user agreed with the avg rating (3 == 3, 1/2 == 1/2, 4/5 == 4/5)
+
+
+todo - add styling for v-dialog

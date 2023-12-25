@@ -10,7 +10,7 @@
     const {orientation, darkmode} = defineProps({
         orientation: {
          type: String as () => 'left' | 'right',
-         default: 'left',
+         default: 'right',
         },
         darkmode: {
         type: Boolean,
