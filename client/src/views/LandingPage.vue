@@ -20,7 +20,7 @@
   </div>
   <div id="wrapped-btn">
     <v-btn color='primary' :disabled="isBtnDisabled" :loading="loading" @click="fetchBookDetails">Wrapped</v-btn>
-    <v-dialog v-model="loading" width="10rem" height="20rem" :scrim="false" persistent>
+    <v-dialog v-model="loading" width="400" :scrim="false" persistent>
     <v-card color="white">
       <v-card-text>
         Please be patient as we are parsing your Goodreads Data.This process may take upto 2-3 minutes.
@@ -36,15 +36,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import SwitchTheme from '../components/SwitchTheme.vue';
 import { useRouter } from 'vue-router';
+import {useWrappedStore} from '../store/store';
 
 const selectedYear = ref(2023);
 const yearOptions = ref([] as { title: string; value: number }[]);
 const uid = ref('');
 const isBtnDisabled = ref(true);
 const loading = ref(false);
+const router = useRouter();
+const store = useWrappedStore()
 
 const generateYearsForWrapped = () => {
   const date = new Date();
@@ -76,11 +79,11 @@ const fetchBookDetails = async () => {
     const response = await fetch(`http://127.0.0.1:5000/wrapped?gr_user_id=${uid.value}&year=${selectedYear.value}`);
     if (response.status === 200){
       const data = await response.json();
-
-      const router= useRouter();
+      //update global state
+      store.updateWrappedData(data);
       router.push({
-        name: `ReadingWrapped${selectedYear.value}`,
-        params: {data}
+        name: 'Wrapped',
+        params: {uid: uid.value }
       })
     }
   } catch (error) {
@@ -97,9 +100,6 @@ const fetchBookDetails = async () => {
 .container{
   text-align: center;
   #main-page-header{
-  h2{
-    margin-block-end: 0;
-  }
   h6{
     margin-block-start: 0;
   }
