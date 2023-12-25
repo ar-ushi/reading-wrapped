@@ -11,7 +11,7 @@
         },
         darkmode: {
         type: Boolean,
-        default: true,
+        default: false,
         },
     })
     const toggleDarkMode = ref(false);
@@ -38,7 +38,6 @@
         }
     })
 </script>
-
 <style scoped>
     .align-right{
        display: flex;

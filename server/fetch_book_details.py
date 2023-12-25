@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, SoupStrainer
 import requests
 import re
 import sys
@@ -11,7 +11,7 @@ class BookDetails():
         self.rows = []
 
     def get_parsed_html(self):
-        url = f'https://www.goodreads.com/review/list/{self.id}?shelf=read&utf8=%E2%9C%93&per_page=infinite&sort=date_read&view=table'
+        url = f'https://www.goodreads.com/review/list/{self.id}?shelf=read&utf8=%E2%9C%93&per_page=infinite&read_at={self.year}&view=table'
         headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         }
@@ -24,6 +24,8 @@ class BookDetails():
 
     def fetch_book_details(self, res):
         soup = BeautifulSoup(res.content, 'html.parser')
+        username= (soup.find("title").text.split(chr(8217)))[0]
+        self.store_book_details.setdefault('username', '').append(username)
         date_read_rows = []
         for element in soup.select(f'.date_read_value:-soup-contains("{self.year}")'):
             month = re.sub("[^a-zA-Z]", "", element.text.strip())
@@ -38,8 +40,9 @@ class BookDetails():
             page = int(re.findall(r'\d+', self.format_element('num_pages'))[0])
             rating= self.map_rating()
             avgrating = float(self.format_element('avg_rating'))
-            booklink = 'www.goodreads.com' + book_rows.find_next('td', class_=f'field cover').find('a')['href']
+            booklink = 'https://www.goodreads.com' + book_rows.find_next('td', class_=f'field cover').find('a')['href']
             bookcover = book_rows.find_next('td', class_=f'field cover').find('img')['src']
+            #genre = self.get_genres(booklink)
 
             self.store_book_details[str(i)] = {
             'title': title,
@@ -48,7 +51,7 @@ class BookDetails():
             'rating': rating,
             'avgrating': avgrating,
             'booklink': booklink,
-            'bookcover': bookcover
+            'bookcover': bookcover,
             }
             self.store_book_details['totalpagesread'] += int(page)
 
@@ -62,6 +65,14 @@ class BookDetails():
         }
         str_rating = self.format_element('rating')
         return rating_map[str_rating]
+
+    def get_genres(self, booklink):
+        res = requests.get(booklink)
+        if (res.status_code == 200):
+            intended_class = 'BookPageMetadataSection__genres'
+            parse_only= SoupStrainer(class_= intended_class)
+            soup = BeautifulSoup(res.content, 'html.parser', parse_only=parse_only)
+            return soup.find('span', class_='Button__labelItem').text
 
     def update_count(self, key,value, inc = 1):
         self.store_book_details.setdefault((key), {})
