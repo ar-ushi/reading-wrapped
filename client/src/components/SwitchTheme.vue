@@ -4,6 +4,9 @@
 
 <script setup lang="ts">
     import {ref, onMounted, defineProps, watch} from 'vue';
+    import {useTheme} from 'vuetify'
+
+    const theme = useTheme()
     const {orientation, darkmode} = defineProps({
         orientation: {
          type: String as () => 'left' | 'right',
@@ -29,15 +32,18 @@
     watch(toggleDarkMode, (value) => {
         isDarkModeOn.value = value? 'On' : 'Off'
         const root = document.querySelector('#app') as HTMLElement;
-        if (value){ //dark mode on 
-        root.style.setProperty('color', '#ffffff');
-        root.style.setProperty('background-color', '#000000')
+        if (value){ //dark mode on
+            theme.global.name.value = 'dark'
+            root.style.setProperty('color', '#ffffff');
+            root.style.setProperty('background-color', '#000000');
         } else{
+            theme.global.name.value='light'
             root.style.removeProperty('color');
             root.style.removeProperty('background-color');
         }
     })
 </script>
+
 <style scoped>
     .align-right{
        display: flex;

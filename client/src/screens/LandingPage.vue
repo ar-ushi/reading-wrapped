@@ -19,7 +19,7 @@
     </div>
   </div>
   <div id="wrapped-btn">
-    <v-btn :disabled="isBtnDisabled" :loading="loading" @click="fetchBookDetails">Wrapped</v-btn>
+    <v-btn color='primary' :disabled="isBtnDisabled" :loading="loading" @click="fetchBookDetails">Wrapped</v-btn>
   </div>
   </div>
 </template>
@@ -27,7 +27,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import SwitchTheme from '../components/SwitchTheme.vue';
-import {useRouter} from 'vue-router';
 
 const selectedYear = ref(2023);
 const yearOptions = ref([] as { title: string; value: number }[]);

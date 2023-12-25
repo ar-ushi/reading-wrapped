@@ -7,11 +7,12 @@ export const vuetify = createVuetify({
   components,
   directives,
   theme: {
+    defaultTheme : 'light',
     themes: {
       light: {
         colors: {
-          primary: '##6C5CE7',
-          background: '#5c148c',
+          primary: '#6C5CE7',
+          background: '#FFFFFF',
           error: '#d63031',
           info: '#0984e3',
           secondary: '#fdcb6e',
@@ -19,9 +20,16 @@ export const vuetify = createVuetify({
           surface: '#6c5ce7',
           warning: '#2d3436',
         },
-        dark: false,
+        dark: false
+      },
+        dark: {
+          colors:{
+            primary: '#5C148C',
+            background: '#000000'
+          }
+        },
         variables: {},
       },
     },
   },
-})
+)

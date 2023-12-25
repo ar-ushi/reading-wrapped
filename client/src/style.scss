@@ -28,7 +28,7 @@ a {
 
   @media (prefers-color-scheme: light) {
     &:hover {
-      color: #747bff;
+      color: var(--primary);
     }
   }
 }
