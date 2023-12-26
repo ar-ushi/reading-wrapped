@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div id="main-page-header">
-    <h2 class="text-secondary">Reading Wrapped</h2>
-    <h6>Supports Goodreads (for now!)</h6>
+    <h1 class="text-secondary">Reading Wrapped</h1>
+    <h5>Supports Goodreads (for now!)</h5>
   </div>
   <div id="main-page-links">
     <p>
@@ -36,7 +36,6 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import SwitchTheme from '../components/SwitchTheme.vue';
 import { useRouter } from 'vue-router';
 import {useWrappedStore} from '../store/store';
 
@@ -97,7 +96,7 @@ const fetchBookDetails = async () => {
 
 <style lang="scss">
   #main-page-header{
-  h6{
+  h5{
     margin-block-start: 0;
   }
 }

@@ -7,7 +7,7 @@ class BookDetails():
     def __init__(self, userid, year):
         self.id = userid
         self.year = year
-        self.store_book_details = {'totalbooksread': 0, 'totalpagesread': 0 , 'username': ''}
+        self.store_book_details = {'totalbooksread': 0, 'totalpagesread': 0 , 'username': '', 'books': []}
         self.rows = []
 
     def get_parsed_html(self):
@@ -35,17 +35,19 @@ class BookDetails():
         self.store_book_details['totalbooksread'] += len(date_read_rows)
         for i, book_rows in enumerate(date_read_rows):
             self.rows = book_rows
+            obj_name = str(i)
             title=self.format_element('title', tag='a')
             author= self.format_element('author',tag='a')
             page = int(re.findall(r'\d+', self.format_element('num_pages'))[0])
             rating= self.map_rating()
             avgrating = float(self.format_element('avg_rating'))
             booklink = 'https://www.goodreads.com' + book_rows.find_next('td', class_=f'field cover').find('a')['href']
-            bookcover = book_rows.find_next('td', class_=f'field cover').find('img')['src']
+            bookcover_comp = book_rows.find_next('td', class_=f'field cover').find('img')['src']
+            bookcover = re.sub(r'\.(?:_SY|_SX)\d+_', '', bookcover_comp)
             #genre = self.get_genres(booklink)
+            #create book object
 
-            self.store_book_details[str(i)] = {
-            'title': title,
+            obj_name = { 'title': title,
             'author': author,
             'page': page,
             'rating': rating,
@@ -53,6 +55,7 @@ class BookDetails():
             'booklink': booklink,
             'bookcover': bookcover,
             }
+            self.store_book_details['books'].append(obj_name)
             self.store_book_details['totalpagesread'] += int(page)
 
     def map_rating(self):

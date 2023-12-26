@@ -5,7 +5,7 @@
             <v-tab @click="setActiveTab('wrapped')" key="wrapped">Wrapped</v-tab>
             <v-tab @click="setActiveTab('stats')" key="stats">Stats (for nerds!)</v-tab>
         </v-tabs>
-        <div v-if="activeTab === 'wrapped'">
+        <div v-if="activeTab === 'wrapped'" class="">
             <BasicWrapped />
         </div>
     </div>
