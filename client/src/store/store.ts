@@ -7,7 +7,9 @@ export interface State {
 export const useWrappedStore = defineStore('wrappedstore', {
     state: () => ({wrappeddata: {}}),
     getters: {
-        getWrappedData: (state) => state.wrappeddata
+        getWrappedData: (state) => {
+            return state.wrappeddata
+        }
     },
     actions:{
         updateWrappedData(value: object) {

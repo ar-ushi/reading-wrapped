@@ -1,8 +1,7 @@
 <template>
-  <SwitchTheme/>
   <div class="container">
     <div id="main-page-header">
-    <h2>Reading Wrapped</h2>
+    <h2 class="text-secondary">Reading Wrapped</h2>
     <h6>Supports Goodreads (for now!)</h6>
   </div>
   <div id="main-page-links">
@@ -97,8 +96,6 @@ const fetchBookDetails = async () => {
 
 
 <style lang="scss">
-.container{
-  text-align: center;
   #main-page-header{
   h6{
     margin-block-start: 0;
@@ -120,6 +117,5 @@ const fetchBookDetails = async () => {
  .url-help{
   font-size: 12px;
  }
-}
 }
 </style>
