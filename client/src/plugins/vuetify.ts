@@ -26,7 +26,8 @@ export const vuetify = createVuetify({
           colors:{
             primary: '#5C148C',
             background: '#000000',
-            secondary:'#402be2',
+            secondary:'#5C148C',
+            error: '#f73535'
           }
         },
         variables: {},
