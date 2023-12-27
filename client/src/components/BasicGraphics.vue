@@ -27,12 +27,13 @@
     <script setup lang="ts">
     import { ref } from 'vue';
     import { useWrappedStore } from '../store/store';
+import { WrappedDetails } from '../utils/interface';
     
     
     const store = useWrappedStore();
-    const wrappedData = ref(store.getWrappedData)
-    const totalbooks = wrappedData.value.totalbooksread;
-    const totalpages = wrappedData.value.totalpagesread;
+    const wrappedData = ref(store.getWrappedData).value as WrappedDetails;
+    const totalbooks = wrappedData.totalbooksread;
+    const totalpages = wrappedData.totalpagesread;
     
 </script>
 

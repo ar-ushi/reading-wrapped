@@ -1,6 +1,6 @@
 <template>
 <div class="container padding-top-1rem flx-dis" >
-    <v-stepper non-linear color="primary" flat mobile bg-color="transparent" :items="items" min-width="80%" max-width="80%" min-height="60%" max-height="60%" step="6">
+    <v-stepper non-linear color="primary" flat mobile bg-color="transparent" :items="items" min-width="80%" max-width="80%" min-height="60%" max-height="60%">
         <v-stepper-window>
             <v-stepper-window-item v-for="(phrase, i) in stepperPhrases" :value="i+1" :key="`${i}--content`">
             <v-card v-html="phrase" color="transparent"></v-card>
@@ -24,12 +24,13 @@ import { ref, toRaw } from 'vue';
 import { useWrappedStore } from '../store/store';
 import BasicGraphics from './BasicGraphics.vue';
 import BookOpinions from './BookOpinions.vue';
+import { WrappedDetails } from '../utils/interface';
 
     const store = useWrappedStore();
     const items: string[] = [ '1', '2', '3', '4', '5', '6', '7'];
-    const wrappedData = ref(store.getWrappedData);
-    const totalbooks = wrappedData.value.totalbooksread;
-    const totalpages = wrappedData.value.totalpagesread;
+    const wrappedData = ref(store.getWrappedData).value as WrappedDetails;
+    const totalbooks = wrappedData.totalbooksread;
+    const totalpages = wrappedData.totalpagesread;
     const minutesspentreading = convertPagesToMinutes(totalpages);
     const daysspentreading = convertMinutesToDays(minutesspentreading);
     const avgrating = getAverage('rating');
@@ -44,7 +45,7 @@ import BookOpinions from './BookOpinions.vue';
         } else {
             text += `We hope you had fun reading this year. <h2 class="text-secondary"Your average rating for the year was ${avgrating} </h2>`
         }
-        text+= ` <span class="font-bold font-size-1.5rem">Here are some of your highest rated books of the year</span><div class='flx-dis'>${highestRatedBookCovers.map((cover: any) => `<img src="${cover}" alt="Book Cover" class="book-cover" />`).join('')}</div>`
+        text+= ` <span class="font-bold font-size-2rem">Here are some of your highest rated books of the year</span><div class='flx-dis'>${highestRatedBookCovers.map((cover: any) => `<img src="${cover}" alt="Book Cover" class="book-cover" />`).join('')}</div>`
         return text;
     }
     const stepperPhrases = [
@@ -65,7 +66,7 @@ import BookOpinions from './BookOpinions.vue';
     }
 
     function sortBooks(key: string){
-        let books = wrappedData.value.books;
+        let books = wrappedData.books;
         return toRaw(books).sort((a,b) => b[key] - a[key])
     }
 
@@ -74,14 +75,14 @@ import BookOpinions from './BookOpinions.vue';
     }
 
     function getAverage(key: string){
-        const sum = toRaw(wrappedData.value.books).reduce((total: any, obj: { [x: string]: any; }) => total + obj[key], 0);
-        return sum/totalbooks;
+        const sum = toRaw(wrappedData.books).reduce((total: any, obj: { [x: string]: any; }) => total + obj[key], 0);
+        return sum/parseInt(totalbooks);
     }
 
     function groupPopularOpinion(){
         let key1 = 'rating';
         let key2 = 'avgrating'
-        let books = toRaw(wrappedData.value.books);
+        let books = toRaw(wrappedData.books);
         let bucket = '4';
         let finalPopularResult = [];
         let finalUnpopularResult = [];
@@ -149,8 +150,8 @@ h4{
     font-weight: 600;
 }
 
-.font-size-1.5rem{
-    font-size: 1.5rem;
+.font-size-2rem{
+    font-size: 2rem;
 }
 
 </style>
