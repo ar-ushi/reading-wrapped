@@ -6,42 +6,10 @@
             <v-card v-html="phrase" color="transparent"></v-card>
             </v-stepper-window-item>
             <v-stepper-window-item :value="6">
-                <h5 class="text-secondary">On some days, you agreed with all the rage on Goodreads!</h5>
-                <div class="grid padding-top-1rem">
-                    <div class="flx" v-for="(item, index) in categoriseByPopularOpinion" :key="index">
-                <template v-if="item">
-                    <img :src="item.bookcover" class="opinion-cover" />
-                    <div class="grid flx-col" style="margin-left: 5px;">
-                        <div class="flx-col">
-                            <div class="rating-text">Average Rating</div>
-                            <h2 class="text-warning">{{item.avgrating}}</h2>
-                        </div>
-                    <div class="flx-col">
-                        <div class="rating-text">Your Rating</div>
-                        <h2 class="text-secondary">{{item.rating}}</h2>
-                    </div>
-                    </div>                    
-                </template>
-                </div>
-                </div>
-                <h5 class="padding-top-1rem text-secondary">On other days, you held opinions strictly against the crowd.</h5>
-                <div class="grid padding-top-1rem">
-                    <div class="flx" v-for="(item, index) in categoriseByUnpopularOpinion" :key="index">
-                <template v-if="item">
-                    <img :src="item.bookcover" class="opinion-cover" />
-                    <div class="grid flx-col" style="margin-left: 5px;">
-                        <div class="flx-col">
-                            <div class="rating-text">Average Rating</div>
-                            <h2 class="text-warning">{{item.avgrating}}</h2>
-                        </div>
-                    <div class="flx-col">
-                        <div class="rating-text">Your Rating</div>
-                        <h2 class="text-secondary">{{item.rating}}</h2>
-                    </div>
-                    </div>                    
-                </template>
-                </div>
-                </div>
+                <h4 class="text-secondary" style="padding-bottom: 10px;">On some days, you agreed with all the rage on Goodreads!</h4>
+                <book-opinions :items="categoriseByPopularOpinion"/>
+                <h4 class="padding-top-1rem text-secondary">On other days, you held opinions strictly against the crowd.</h4>
+                <book-opinions :items="categoriseByUnpopularOpinion" />
             </v-stepper-window-item>
             <v-stepper-window-item :value="7" :key="`7--content`">
                 <basic-graphics />
@@ -55,6 +23,7 @@
 import { ref, toRaw } from 'vue';
 import { useWrappedStore } from '../store/store';
 import BasicGraphics from './BasicGraphics.vue';
+import BookOpinions from './BookOpinions.vue';
 
     const store = useWrappedStore();
     const items: string[] = [ '1', '2', '3', '4', '5', '6', '7'];
@@ -156,20 +125,8 @@ span{
     font-weight: 500;
     min-height: 50vh;
 }
-.opinion-cover{
-    max-width:100px;
-    height: 125px;
-}
-
-.rating-text{
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.grid{
-    display: flex;
-    justify-content: space-evenly;
-    place-items: center;
+h4{
+    margin-block-start: 0;
 }
 </style>
 
