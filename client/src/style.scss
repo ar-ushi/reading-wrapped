@@ -46,6 +46,14 @@ body {
   justify-content: center;
 }
 
+.flx-col{
+  display: flex;
+  flex-direction: column;
+}
+
+.flx{
+  display: flex;
+}
 
 h1 {
   font-size: 3.2em;
