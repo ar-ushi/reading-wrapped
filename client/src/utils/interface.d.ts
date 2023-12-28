@@ -3,8 +3,9 @@ export interface BookDetails {
  'page': string,
  'rating': string,
  'avgrating': string,
- 'booklink': booklink,
- 'bookcover' : bookcover   
+ 'booklink': string,
+ 'bookcover' : string,
+ 'genre': string   
 }
 
 export interface WrappedDetails{

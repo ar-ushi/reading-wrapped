@@ -5,13 +5,13 @@
             <v-stepper-window-item v-for="(phrase, i) in stepperPhrases" :value="i+1" :key="`${i}--content`">
             <v-card v-html="phrase" color="transparent"></v-card>
             </v-stepper-window-item>
-            <v-stepper-window-item :value="7">
+            <v-stepper-window-item :value="8">
                 <h4 class="text-secondary" style="padding-bottom: 10px;">On some days, you agreed with all the rage on Goodreads!</h4>
                 <book-opinions :items="categoriseByPopularOpinion"/>
                 <h4 class="padding-top-1rem text-secondary">On other days, you held opinions strictly against the crowd.</h4>
                 <book-opinions :items="categoriseByUnpopularOpinion" />
             </v-stepper-window-item>
-            <v-stepper-window-item :value="8" :key="`8--content`">
+            <v-stepper-window-item :value="9" :key="`8--content`">
                 <basic-graphics />
             </v-stepper-window-item>
         </v-stepper-window>
@@ -27,7 +27,7 @@ import BookOpinions from './BookOpinions.vue';
 import { WrappedDetails } from '../utils/interface';
 
     const store = useWrappedStore();
-    const items: string[] = [ '1', '2', '3', '4', '5', '6', '7', '8'];
+    const items: string[] = [ '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     const wrappedData = ref(store.getWrappedData).value as WrappedDetails;
     const totalbooks = wrappedData.totalbooksread;
     const totalpages = wrappedData.totalpagesread;
@@ -39,6 +39,7 @@ import { WrappedDetails } from '../utils/interface';
     const highestRatedBookCovers = getBooksCover(5, 'bookcover', sortBooks('rating'))
     const [categoriseByPopularOpinion, categoriseByUnpopularOpinion] = groupPopularOpinion();
     const [totalAuthorsRead, mostReadAuthor, mostReadBooksByAuthor] = getUniqueAuthors();
+    const [countOfTotalGenres,top5Genre] = getMostReadGenres();
     const avgratingtext = () => {
         let text = '';
         if (avgrating >= 3.5){
@@ -56,7 +57,11 @@ import { WrappedDetails } from '../utils/interface';
         `If that doesn't already sound like a lot, <h2 class="text-secondary">that comes close to ${daysspentreading} days.</h2> <span class="font-bold font-size-1.5rem">These books probably took up your time </span>
         <div class='flx-dis'>${longBookCovers.map((cover: any) => `<img src="${cover}" alt="Book Cover" class="book-cover" />`).join('')}</div>`,  
         avgratingtext(),
-        `You read from a total of ${totalAuthorsRead} authors but one clearly stole your heart.</br> You enjoyed reading from <h2 class="text-secondary">${mostReadAuthor}</h2> the most with <span class="text-secondary font-bold"> ${mostReadBooksByAuthor} </span> books`
+        `You read from a total of ${totalAuthorsRead} authors but one clearly stole your heart.</br> You enjoyed reading from <h2 class="text-secondary">${mostReadAuthor}</h2> the most with <span class="text-secondary font-bold"> ${mostReadBooksByAuthor} </span> books`,
+        `Speaking of stealing your heart, you read a whopping total of ${countOfTotalGenres} this year but here are some of your favorites. <div class='flx'> 
+        <h2 class="text-secondary">Top 5 Genres </h2>
+        ${(top5Genre as string[]).map((genre: string) => `<p class="font-bold"> ${genre} </p>`)}
+        </div> `
     ]
 
     function convertPagesToMinutes(pg: string){
@@ -131,16 +136,21 @@ import { WrappedDetails } from '../utils/interface';
         authors.forEach(author => {
             authorCounts[author] = (authorCounts[author] || 0) + 1;
         })
-        let mostFrequentAuthor;
-        let maxCount = 0;
-        for (const author in authorCounts){
-            if (authorCounts[author]> maxCount){
-                mostFrequentAuthor = author;
-                maxCount = authorCounts[author]
-            }
-        }
-        mostFrequentAuthor = mostFrequentAuthor.split(',').reverse().join(' ')
-        return [uniqueAuthors.size, mostFrequentAuthor, maxCount];
+        let sortedAuthorsByReadCount = Object.keys(authorCounts).sort((a,b) => authorCounts[b] - authorCounts[a])
+        let mostFrequentAuthor = sortedAuthorsByReadCount[0].split(',').reverse().join(' ')
+        return [uniqueAuthors.size, mostFrequentAuthor, authorCounts[sortedAuthorsByReadCount[0]]];
+    }
+
+    function getMostReadGenres(){
+        const genres = toRaw(wrappedData.books).map((genreCount,book) => {
+            genreCount[book['genre']] = (genreCount[book['genre']] || 0) + 1;
+            return genreCount;
+        }, {});
+        console.log(genres);
+        let sortedGenres = Object.keys(genres).sort((a,b) => genres[b] - genres[a])
+        
+        let top5Genres = sortedGenres.splice(0,5);
+        return [genres.length, top5Genres];
     }
 </script>
 
