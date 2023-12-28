@@ -89,6 +89,7 @@ import { WrappedDetails } from '../utils/interface';
         let bucket = '4';
         let finalPopularResult = [];
         let finalUnpopularResult = [];
+        let randomBook;
         const popularOpinions = books.reduce((res, book) => {
             if (book[key1]>= 3.7 && book[key2] >=3.7){
                 res['4'].push(book);
@@ -101,16 +102,24 @@ import { WrappedDetails } from '../utils/interface';
             }
             return res; 
         }, {'4' : [], '3': [], '2': [], 'unpopular': []})
-        while (finalPopularResult.length < 2){
-            const randomBook = Math.floor(Math.random() * (popularOpinions[bucket].length))
+        while (finalPopularResult.length < 3){
+            let usedIndices = [];
+            do {
+                randomBook = Math.floor(Math.random() * (popularOpinions[bucket].length))
+            } while (usedIndices.includes(randomBook));
             if (popularOpinions[bucket][randomBook]){
                 finalPopularResult.push(popularOpinions[bucket][randomBook])
             }
+            usedIndices.push(randomBook);
             bucket = bucket === '4' ? '3' : bucket === '3' ? '2' : '4'
         }
         while (finalUnpopularResult.length < 3){
-            const randomBook = Math.floor(Math.random() * (popularOpinions['unpopular'].length))
-            finalUnpopularResult.push(popularOpinions['unpopular'][randomBook])
+            let usedIndices = [];
+            do {
+            randomBook = Math.floor(Math.random() * (popularOpinions['unpopular'].length))
+            } while (usedIndices.includes(randomBook));
+            finalUnpopularResult.push(popularOpinions['unpopular'][randomBook]);
+            usedIndices.push(randomBook);
         }
         return [finalPopularResult, finalUnpopularResult];
     }

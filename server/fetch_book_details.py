@@ -44,7 +44,7 @@ class BookDetails():
             booklink = 'https://www.goodreads.com' + book_rows.find_next('td', class_=f'field cover').find('a')['href']
             bookcover_comp = book_rows.find_next('td', class_=f'field cover').find('img')['src']
             bookcover = re.sub(r'\.(?:_SY|_SX)\d+_', '', bookcover_comp)
-            #genre = self.get_genres(booklink)
+            genre = self.get_genres(booklink)
             #create book object
 
             obj_name = { 'title': title,
@@ -54,6 +54,7 @@ class BookDetails():
             'avgrating': avgrating,
             'booklink': booklink,
             'bookcover': bookcover,
+            'genre' : genre
             }
             self.store_book_details['books'].append(obj_name)
             self.store_book_details['totalpagesread'] += int(page)
@@ -70,13 +71,16 @@ class BookDetails():
         return rating_map[str_rating]
 
     def get_genres(self, booklink):
+        forbidden_genres = ['Fiction', 'Nonfiction', 'Short Stories', 'Anthology', 'Adult']
         res = requests.get(booklink)
         if (res.status_code == 200):
             intended_class = 'BookPageMetadataSection__genres'
             parse_only= SoupStrainer(class_= intended_class)
             soup = BeautifulSoup(res.content, 'html.parser', parse_only=parse_only)
-            return soup.find('span', class_='Button__labelItem').text
-
+            genres = [span.text.strip() for span in soup.find_all('span', class_='Button__labelItem')]
+            for genre in genres:
+                if genre not in forbidden_genres:
+                    return genre
     def update_count(self, key,value, inc = 1):
         self.store_book_details.setdefault((key), {})
         self.store_book_details[key][value] = self.store_book_details[key].get(value, 0) + inc
