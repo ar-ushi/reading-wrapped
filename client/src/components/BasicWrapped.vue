@@ -5,13 +5,13 @@
             <v-stepper-window-item v-for="(phrase, i) in stepperPhrases" :value="i+1" :key="`${i}--content`">
             <v-card v-html="phrase" color="transparent"></v-card>
             </v-stepper-window-item>
-            <v-stepper-window-item :value="6">
+            <v-stepper-window-item :value="7">
                 <h4 class="text-secondary" style="padding-bottom: 10px;">On some days, you agreed with all the rage on Goodreads!</h4>
                 <book-opinions :items="categoriseByPopularOpinion"/>
                 <h4 class="padding-top-1rem text-secondary">On other days, you held opinions strictly against the crowd.</h4>
                 <book-opinions :items="categoriseByUnpopularOpinion" />
             </v-stepper-window-item>
-            <v-stepper-window-item :value="7" :key="`7--content`">
+            <v-stepper-window-item :value="8" :key="`8--content`">
                 <basic-graphics />
             </v-stepper-window-item>
         </v-stepper-window>
@@ -27,7 +27,7 @@ import BookOpinions from './BookOpinions.vue';
 import { WrappedDetails } from '../utils/interface';
 
     const store = useWrappedStore();
-    const items: string[] = [ '1', '2', '3', '4', '5', '6', '7'];
+    const items: string[] = [ '1', '2', '3', '4', '5', '6', '7', '8'];
     const wrappedData = ref(store.getWrappedData).value as WrappedDetails;
     const totalbooks = wrappedData.totalbooksread;
     const totalpages = wrappedData.totalpagesread;
@@ -38,6 +38,7 @@ import { WrappedDetails } from '../utils/interface';
     const longBookCovers = getBooksCover(4, 'bookcover', sortBooks('page'));
     const highestRatedBookCovers = getBooksCover(5, 'bookcover', sortBooks('rating'))
     const [categoriseByPopularOpinion, categoriseByUnpopularOpinion] = groupPopularOpinion();
+    const [totalAuthorsRead, mostReadAuthor, mostReadBooksByAuthor] = getUniqueAuthors();
     const avgratingtext = () => {
         let text = '';
         if (avgrating >= 3.5){
@@ -45,7 +46,7 @@ import { WrappedDetails } from '../utils/interface';
         } else {
             text += `We hope you had fun reading this year. <h2 class="text-secondary"Your average rating for the year was ${avgrating} </h2>`
         }
-        text+= ` <span class="font-bold font-size-2rem">Here are some of your highest rated books of the year</span><div class='flx-dis'>${highestRatedBookCovers.map((cover: any) => `<img src="${cover}" alt="Book Cover" class="book-cover" />`).join('')}</div>`
+        text+= ` <span class="font-bold font-size-1rem">Here are some of your highest rated books of the year</span><div class='flx-dis'>${highestRatedBookCovers.map((cover: any) => `<img src="${cover}" alt="Book Cover" class="book-cover" />`).join('')}</div>`
         return text;
     }
     const stepperPhrases = [
@@ -55,7 +56,9 @@ import { WrappedDetails } from '../utils/interface';
         `If that doesn't already sound like a lot, <h2 class="text-secondary">that comes close to ${daysspentreading} days.</h2> <span class="font-bold font-size-1.5rem">These books probably took up your time </span>
         <div class='flx-dis'>${longBookCovers.map((cover: any) => `<img src="${cover}" alt="Book Cover" class="book-cover" />`).join('')}</div>`,  
         avgratingtext(),
+        `You read from a total of ${totalAuthorsRead} authors but one clearly stole your heart.</br> You enjoyed reading from <h2 class="text-secondary">${mostReadAuthor}</h2> the most with <span class="text-secondary font-bold"> ${mostReadBooksByAuthor} </span> books`
     ]
+
     function convertPagesToMinutes(pg: string){
         //it takes 2 mins on avg to read a page 
         return (parseInt(pg) * 3)
@@ -87,9 +90,9 @@ import { WrappedDetails } from '../utils/interface';
         let finalPopularResult = [];
         let finalUnpopularResult = [];
         const popularOpinions = books.reduce((res, book) => {
-            if (book[key1]>= 4 && book[key2] >=4){
+            if (book[key1]>= 3.7 && book[key2] >=3.7){
                 res['4'].push(book);
-            } else if (book[key1] >= 3 && book[key1] < 4 && book[key2] >= 3 && book[key2] < 4){
+            } else if (book[key1] >= 3 && book[key1] < 3.7 && book[key2] >= 3 && book[key2] < 3.7){
                 res['3'].push(book)
             } else if (book[key1] <=2 && book[key2] <=2) {
                 res['2'].push(book);
@@ -98,9 +101,11 @@ import { WrappedDetails } from '../utils/interface';
             }
             return res; 
         }, {'4' : [], '3': [], '2': [], 'unpopular': []})
-        while (finalPopularResult.length < 3){
+        while (finalPopularResult.length < 2){
             const randomBook = Math.floor(Math.random() * (popularOpinions[bucket].length))
-            finalPopularResult.push(popularOpinions[bucket][randomBook])
+            if (popularOpinions[bucket][randomBook]){
+                finalPopularResult.push(popularOpinions[bucket][randomBook])
+            }
             bucket = bucket === '4' ? '3' : bucket === '3' ? '2' : '4'
         }
         while (finalUnpopularResult.length < 3){
@@ -108,6 +113,25 @@ import { WrappedDetails } from '../utils/interface';
             finalUnpopularResult.push(popularOpinions['unpopular'][randomBook])
         }
         return [finalPopularResult, finalUnpopularResult];
+    }
+
+    function getUniqueAuthors(){
+        const authors = toRaw(wrappedData.books).map(book => book['author']);
+        const uniqueAuthors = new Set(authors);
+        const authorCounts = {};
+        authors.forEach(author => {
+            authorCounts[author] = (authorCounts[author] || 0) + 1;
+        })
+        let mostFrequentAuthor;
+        let maxCount = 0;
+        for (const author in authorCounts){
+            if (authorCounts[author]> maxCount){
+                mostFrequentAuthor = author;
+                maxCount = authorCounts[author]
+            }
+        }
+        mostFrequentAuthor = mostFrequentAuthor.split(',').reverse().join(' ')
+        return [uniqueAuthors.size, mostFrequentAuthor, maxCount];
     }
 </script>
 
@@ -152,6 +176,10 @@ h4{
 
 .font-size-2rem{
     font-size: 2rem;
+}
+
+.font-size-1rem{
+    font-size: 1rem;
 }
 
 </style>
