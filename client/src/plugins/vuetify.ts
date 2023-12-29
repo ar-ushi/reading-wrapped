@@ -19,6 +19,7 @@ export const vuetify = createVuetify({
           success: '#00cec9',
           surface: '#6c5ce7',
           warning: '#2d3436',
+          text: '#000000',
         },
         dark: false
       },
@@ -27,7 +28,8 @@ export const vuetify = createVuetify({
             primary: '#5C148C',
             background: '#000000',
             secondary:'#5C148C',
-            error: '#f73535'
+            error: '#f73535',
+            text: '#ffffff'
           }
         },
         variables: {},

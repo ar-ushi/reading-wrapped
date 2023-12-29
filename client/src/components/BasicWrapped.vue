@@ -58,10 +58,7 @@ import { WrappedDetails } from '../utils/interface';
         <div class='flx-dis'>${longBookCovers.map((cover: any) => `<img src="${cover}" alt="Book Cover" class="book-cover" />`).join('')}</div>`,  
         avgratingtext(),
         `You read from a total of ${totalAuthorsRead} authors but one clearly stole your heart.</br> You enjoyed reading from <h2 class="text-secondary">${mostReadAuthor}</h2> the most with <span class="text-secondary font-bold"> ${mostReadBooksByAuthor} </span> books`,
-        `Speaking of stealing your heart, you read a whopping total of ${countOfTotalGenres} this year but here are some of your favorites. <div class='flx'> 
-        <h2 class="text-secondary">Top 5 Genres </h2>
-        ${(top5Genre as string[]).map((genre: string) => `<p class="font-bold"> ${genre} </p>`)}
-        </div> `
+        `Speaking of stealing your heart, you read a whopping total of ${countOfTotalGenres} this year but here are some of your favorites. <div class='flx-col'> <h2 class="text-secondary">Top 5 Genres </h2> ${(top5Genre as string[]).map((genre: string) => `<span class="font-bold"> ${genre} </span>`).join('')} </div>`
     ]
 
     function convertPagesToMinutes(pg: string){
@@ -142,15 +139,14 @@ import { WrappedDetails } from '../utils/interface';
     }
 
     function getMostReadGenres(){
-        const genres = toRaw(wrappedData.books).map((genreCount,book) => {
+        const genres = toRaw(wrappedData.books).reduce((genreCount, book) => {
             genreCount[book['genre']] = (genreCount[book['genre']] || 0) + 1;
-            return genreCount;
+        return genreCount;
         }, {});
-        console.log(genres);
         let sortedGenres = Object.keys(genres).sort((a,b) => genres[b] - genres[a])
-        
         let top5Genres = sortedGenres.splice(0,5);
-        return [genres.length, top5Genres];
+        console.log(top5Genres)
+        return [Object.keys(genres).length, top5Genres];
     }
 </script>
 
@@ -185,9 +181,14 @@ h4{
     height:50px;
     box-shadow: none;
 }
-.v-stepper-item{
-    color: var(--v-theme-primary);
+.v-stepper-item__avatar.v-avatar{
+    background: rgba(var(--v-theme-primary));
+    color: var(--v-theme-text);
 }
+
+.selected .v-stepper-item__avatar.v-avatar{
+    background: rgba(var(--v-theme-secondary));
+} 
 
 .font-bold{
     font-weight: 600;
