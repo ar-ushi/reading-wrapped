@@ -58,7 +58,7 @@ import { WrappedDetails } from '../utils/interface';
         <div class='flx-dis'>${longBookCovers.map((cover: any) => `<img src="${cover}" alt="Book Cover" class="book-cover" />`).join('')}</div>`,  
         avgratingtext(),
         `You read from a total of ${totalAuthorsRead} authors but one clearly stole your heart.</br> You enjoyed reading from <h2 class="text-secondary">${mostReadAuthor}</h2> the most with <span class="text-secondary font-bold"> ${mostReadBooksByAuthor} </span> books`,
-        `Speaking of stealing your heart, you read a whopping total of ${countOfTotalGenres} this year but here are some of your favorites. <div class='flx-col'> <h2 class="text-secondary">Top 5 Genres </h2> ${(top5Genre as string[]).map((genre: string) => `<span class="font-bold"> ${genre} </span>`).join('')} </div>`
+        `Speaking of stealing your heart, you read a whopping total of <span class="text-secondary font-bold">${countOfTotalGenres} </span> unique genres this year. <div class='flx-col'> <h2 class="text-secondary">Top 5 Genres </h2> ${(top5Genre as string[]).map((genre: string) => `<span class="font-bold"> ${genre} </span>`).join('')} </div>`
     ]
 
     function convertPagesToMinutes(pg: string){
@@ -182,11 +182,12 @@ h4{
     box-shadow: none;
 }
 .v-stepper-item__avatar.v-avatar{
-    background: rgba(var(--v-theme-primary));
-    color: var(--v-theme-text);
+    background: rgb(var(--v-theme-primary));
+    color: white;
+    font-weight: 500;
 }
 
-.selected .v-stepper-item__avatar.v-avatar{
+.v-stepper-item--complete .v-stepper-item__avatar.v-avatar, .v-stepper-item--selected .v-stepper-item__avatar.v-avatar{
     background: rgba(var(--v-theme-secondary));
 } 
 
