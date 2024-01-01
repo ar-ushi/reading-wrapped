@@ -10,7 +10,7 @@ CORS(app, resources={r'/*' : {'origins': '*'}})
 def fetch_goodreads_data():
     id = request.args.get('gr_user_id')
     year= request.args.get('year')
-    bd = BookDetails('19117004', '2023')
+    bd = BookDetails(19117004, 2022)
     book_details_data = bd.get_parsed_html()
     return book_details_data
 
