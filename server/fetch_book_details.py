@@ -7,6 +7,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from dotenv import load_dotenv
+import os
+
 
 class BookDetails():
     def __init__(self, userid, year):
@@ -14,7 +17,8 @@ class BookDetails():
         self.year = year
         self.store_book_details = {'totalbooksread': 0, 'totalpagesread': 0 , 'username': '', 'books': []}
         self.rows = []
-
+        load_dotenv()
+        
     def login_to_goodreads(self, driver):
         login_url = 'https://www.goodreads.com/ap/signin?language=en_US&openid.assoc_handle=amzn_goodreads_web_na&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.pape.max_auth_age=0&openid.return_to=https%3A%2F%2Fwww.goodreads.com%2Fap-handler%2Fsign-in&siteState=102cb5ef9d6283aecfd2282191b29742'
 
@@ -27,8 +31,8 @@ class BookDetails():
         submit_button = driver.find_element(By.ID, 'signInSubmit')
 
         # Input your username and password
-        username_field.send_keys('aggarwalarushi5@gmail.com')
-        password_field.send_keys('lifeisme123')
+        username_field.send_keys(os.getenv("EMAIL"))
+        password_field.send_keys(os.getenv("PASSWORD"))
 
         # Click the submit button
         submit_button.click()
@@ -109,18 +113,6 @@ class BookDetails():
             }
             self.store_book_details['books'].append(obj_name)
             self.store_book_details['totalpagesread'] += int(page)
-
-    def map_rating(self):
-        rating_map= {
-            'it was amazing' : 5,
-            'really liked it': 4,
-            'liked it' : 3,
-            'it was ok': 2,
-            'did not like it': 1
-        }
-        str_rating = self.format_element('rating')
-        print(str_rating)
-        return rating_map[str_rating]
 
     def get_genres(self, booklink):
         forbidden_genres = ['Fiction', 'Nonfiction', 'Short Stories', 'Anthology', 'Adult']

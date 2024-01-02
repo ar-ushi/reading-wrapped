@@ -26,8 +26,8 @@ export function getBooksCover(val: number, key: string,books){
 
 export function getAverage(key: string){
     let books = wrappedData.books
-    const sum = books.reduce((total: any, obj: { [x: string]: any; }) => total + obj[key], 0);
-    return sum/parseInt(wrappedData.totalbooksread);
+    const sum = books.reduce((total: any, obj: { [x: string]: any; }) => total + parseInt(obj[key]), 0);
+    return (sum/parseInt(wrappedData.totalbooksread)).toPrecision(2);
 }
 
 export function getMostReadGenres(){
