@@ -1,0 +1,15 @@
+version: '1'
+
+services:
+  server:
+    build:
+      context: .
+      dockrfile: ./server/Dockerfile
+      ports:
+      - "5000:5000"
+      depends_on:
+      - client
+  client:
+    build:
+      content: .
+      docketfile: ./client/Dockerfile
