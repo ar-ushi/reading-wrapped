@@ -27,7 +27,7 @@ class BookDetails():
              driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     
             # Wait for the page to load after scrolling
-            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'infiniteStatus')))
+            WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, 'infiniteStatus')))
         except Exception as e:
             print(f"An error occurred: {str(e)}")
 
@@ -59,22 +59,22 @@ class BookDetails():
             title=self.format_element('title', tag='a')
             author= self.format_element('author',tag='a')
             page = int(re.findall(r'\d+', self.format_element('num_pages'))[0])
-            rating= book_rows.find_next('td', class_=f'field rating').find('div', class_='stars')['data-rating']
+            rating= self.map_rating()            
             avgrating = float(self.format_element('avg_rating'))
             booklink = 'https://www.goodreads.com' + book_rows.find_next('td', class_=f'field cover').find('a')['href']
             bookcover_comp = book_rows.find_next('td', class_=f'field cover').find('img')['src']
             bookcover = re.sub(r'\.(?:_SY|_SX)\d+_', '', bookcover_comp)
-            genre = self.get_genres(booklink)
+            #genre = self.get_genres(booklink)
             #create book object
 
             obj_name = { 'title': title,
             'author': author,
             'page': page,
-            #'rating': rating,
+            'rating': rating,
             'avgrating': avgrating,
             'booklink': booklink,
             'bookcover': bookcover,
-            'genre' : genre
+            #'genre' : genre
             }
             self.store_book_details['books'].append(obj_name)
             self.store_book_details['totalpagesread'] += int(page)
@@ -93,6 +93,17 @@ class BookDetails():
     def update_count(self, key,value, inc = 1):
         self.store_book_details.setdefault((key), {})
         self.store_book_details[key][value] = self.store_book_details[key].get(value, 0) + inc
+    
+    def map_rating(self):
+        rating_map= {
+            'it was amazing' : 5,
+            'really liked it': 4,
+            'liked it' : 3,
+            'it was ok': 2,
+            'did not like it': 1
+        }
+        str_rating = self.format_element('rating')
+        return rating_map[str_rating]
     
     def format_element(self,class_name, tag='div'):
         return self.rows.find_next('td', class_=f'field {class_name}').find(tag).text.strip()

@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" id="graphic-stats">
         <h2>Your Year At A Glance</h2>
         <div class="padding-top-1rem flx-space-evenly">
             <template v-for="book in highestBookCovers">
@@ -8,7 +8,7 @@
         </div>
         <div class="grid padding-top-1rem">
             <div class="flx-col">
-                <h2 class="text-secondary">Total Genres</h2>
+                <h2 class="text-secondary">Total Books Read</h2>
                 <h2 class="no-font-weight">{{ totalbooks}}</h2>
             </div>
             <div class="flx-col">
@@ -16,7 +16,7 @@
                 <h2 class="no-font-weight">{{ minutesspentreading}}</h2> 
             </div>
         </div>
-        <div class="grid  padding-top-1rem">
+        <div class="grid padding-top-1rem">
             <div class="flx-col">
                 <h2 class="text-secondary">Top 5 Genres</h2>
                 <template v-for="genre in top5Genre">
@@ -24,22 +24,24 @@
                 </template>
             </div>
             <div class="flx-col">
-                <h2 class="text-secondary">Most Read Author</h2>
+                <h2 class="text-secondary" style="margin-top: 0.5rem;">Most Read Author</h2>
                 <h2 class="no-font-weight">{{mostReadAuthor}}</h2>
-                <h2 class="text-secondary">Average Rating</h2>
+                <h2 class="text-secondary" style="margin-top: 0.5rem;">Average Rating</h2>
                 <h2 class="no-font-weight">{{avgrating}}</h2> 
- 
             </div> 
         </div>
+        <v-btn color='primary' :href="downloadHref" :download="downloadFilename" @click="generatePNG">Download PNG</v-btn>
     </div>
     </template>
     
-    <script setup lang="ts">
+<script setup lang="ts">
     import { ref } from 'vue';
     import { useWrappedStore } from '../store/store';
     import { WrappedDetails } from '../utils/interface';
     import { convertPagesToMinutes, defineWrappedData, getAverage, getBooksCover, getMostReadGenres, getUniqueAuthors, sortBooks } from '../utils/parseBookDetailsMethods';
-    
+    import html2canvas from 'html2canvas';
+
+
     const store = useWrappedStore();
     const wrappedData = ref(store.getWrappedData).value as WrappedDetails;
     /* util calls */
@@ -47,11 +49,23 @@
     const totalbooks = wrappedData.totalbooksread;
     const minutesspentreading = convertPagesToMinutes();
     const highestBookCovers = getBooksCover(4, 'bookcover', sortBooks('rating'));
-    const [totalAuthorsRead, mostReadAuthor, mostReadBooksByAuthor] = getUniqueAuthors();
-    const [countOfTotalGenres,top5Genre] = getMostReadGenres();
+    const [mostReadAuthor] = getUniqueAuthors();
+    const [top5Genre] = getMostReadGenres();
     const avgrating = getAverage('rating');
-//basic idea -- 3 covers of highest rated book, top author, top genres - books read, minutes read 
+    let downloadHref = '';
+    let downloadFilename = 'yearly-graphic.png';
 
+    
+    function generatePNG(){
+        const parentElement = document.getElementById('graphic-stats')
+
+        html2canvas(parentElement).then((canvas) => {
+            const dataUrl = canvas.toDataURL('image/png');
+            downloadHref = dataUrl;
+        })
+    }
+//basic idea -- 3 covers of highest rated book, top author, top genres - books read, minutes read 
+//write a md query for less than 768px where justify content = space-btwn
 </script>
 
 <style scoped>
@@ -63,5 +77,10 @@
 
 .no-font-weight{
     font-weight: 400;
+}
+@media (max-width: 768px) {
+    .grid:nth-child(2){
+        justify-content: space-between;
+    }
 }
 </style>

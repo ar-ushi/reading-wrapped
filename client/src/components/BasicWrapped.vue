@@ -1,6 +1,6 @@
 <template>
 <div class="container padding-top-1rem flx-dis" >
-    <v-stepper flat mobile bg-color="transparent" :items="items" min-width="80%" max-width="80%" min-height="60%" max-height="60%" non-linear>
+    <v-stepper flat mobile bg-color="transparent" :items="items" width="60%" min-height="60%" max-height="60%" non-linear>
         <v-stepper-window>
             <v-stepper-window-item v-for="(phrase, i) in stepperPhrases" :value="i+1" :key="`${i}--content`">
             <v-card v-html="phrase" color="transparent"></v-card>
