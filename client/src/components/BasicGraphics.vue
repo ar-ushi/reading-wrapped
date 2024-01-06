@@ -30,8 +30,8 @@
                 <h2 class="no-font-weight">{{avgrating}}</h2> 
             </div> 
         </div>
-        <v-btn color='primary' :href="downloadHref" :download="downloadFilename" @click="generatePNG">Download PNG</v-btn>
     </div>
+    <v-btn color="primary" @click="generatePNG">Download PNG</v-btn>
     </template>
     
 <script setup lang="ts">
@@ -52,20 +52,23 @@
     const [mostReadAuthor] = getUniqueAuthors();
     const [top5Genre] = getMostReadGenres();
     const avgrating = getAverage('rating');
-    let downloadHref = '';
-    let downloadFilename = 'yearly-graphic.png';
 
-    
     function generatePNG(){
         const parentElement = document.getElementById('graphic-stats')
 
-        html2canvas(parentElement).then((canvas) => {
-            const dataUrl = canvas.toDataURL('image/png');
-            downloadHref = dataUrl;
+        const width = 1080;
+        const height = 1920;
+
+        const scale = Math.min(width / parentElement.offsetWidth, height / parentElement.offsetHeight);
+
+        html2canvas(parentElement, {useCORS: true, scale}).then((canvas) => {
+            const dataUrl = canvas.toDataURL('readingwrapped/png');
+            const downloadLink = document.createElement('a');
+            downloadLink.href = dataUrl;
+            downloadLink.download = 'readingwrapped.png';
+            downloadLink.click();
         })
     }
-//basic idea -- 3 covers of highest rated book, top author, top genres - books read, minutes read 
-//write a md query for less than 768px where justify content = space-btwn
 </script>
 
 <style scoped>
@@ -82,5 +85,9 @@
     .grid:nth-child(2){
         justify-content: space-between;
     }
+}
+
+.container{
+    margin-bottom: 1.5rem;
 }
 </style>

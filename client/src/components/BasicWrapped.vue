@@ -37,7 +37,7 @@ import { convertPagesToMinutes, convertMinutesToDays, getBooksCover, sortBooks, 
     const minutesspentreading = convertPagesToMinutes();
     const daysspentreading = convertMinutesToDays(minutesspentreading);
     const avgrating = getAverage('rating');
-    const avgpageread = Math.round(getAverage('page'));
+    const avgpageread = getAverage('page');
     const longBookCovers = getBooksCover(4, 'bookcover', sortBooks('page'));
     const highestRatedBookCovers = getBooksCover(5, 'bookcover', sortBooks('rating'))
     const [categoriseByPopularOpinion, categoriseByUnpopularOpinion] = groupPopularOpinion();
@@ -45,7 +45,7 @@ import { convertPagesToMinutes, convertMinutesToDays, getBooksCover, sortBooks, 
     const [countOfTotalGenres,top5Genre] = getMostReadGenres();
     const avgratingtext = () => {
         let text = '';
-        if (avgrating >= 3.5){
+        if (parseInt(avgrating) >= 3.5){
             text += `Why wouldn't you read so much when you've had such a good year? <h2 class="text-secondary">Your average rating for the year was ${avgrating}</h2>`
         } else {
             text += `We hope you had fun reading this year. <h2 class="text-secondary"Your average rating for the year was ${avgrating} </h2>`
