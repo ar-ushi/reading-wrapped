@@ -4,7 +4,7 @@ services:
   server:
     build:
       context: .
-      dockrfile: ./server/Dockerfile
+      dockerfile: ./server/Dockerfile
       ports:
       - "5000:5000"
       depends_on:
@@ -12,4 +12,4 @@ services:
   client:
     build:
       content: .
-      docketfile: ./client/Dockerfile
+      dockerfile: ./client/Dockerfile
