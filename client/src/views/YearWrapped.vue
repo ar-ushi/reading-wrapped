@@ -15,10 +15,11 @@
 import { onMounted, ref } from 'vue';
 import { useWrappedStore } from '../store/store';
 import BasicWrapped from '../components/BasicWrapped.vue';
+import { WrappedDetails } from '../utils/interface';
 
 const store = useWrappedStore();
 const wrappedData = ref(store.getWrappedData);
-const username = wrappedData.value.username;
+const username = (wrappedData.value as WrappedDetails).username;
 const activeTab = ref('wrapped');
 
 onMounted(() => {
