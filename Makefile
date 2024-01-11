@@ -4,7 +4,8 @@
 IMAGE_NAME :=cyborgslament/reading-wrapped
 DOCKER_FILE1 := client/Dockerfile
 DOCKER_FILE2 := server/Dockerfile
-CONTAINER_NAME := reading-wrapped-container
+CONTAINER_NAME_CLIENT := reading-wrapped-client-1
+CONTAINER_NAME_SERVER := reading-wrapped-server-1
 DOCKER_COMPOSE_FILE := docker-compose.yml
 
 # Build Docker image
@@ -25,8 +26,8 @@ compose-up:
 
 # Stop and remove Docker container
 stop:
-	docker stop $(CONTAINER_NAME)
-	docker rm $(CONTAINER_NAME)
+	docker stop $(CONTAINER_NAME_CLIENT) $(CONTAINER_NAME_SERVER)
+	docker rm $(CONTAINER_NAME_CLIENT) $(CONTAINER_NAME_SERVER)
 
 # Stop and remove Docker container with Docker Compose
 compose-down:
