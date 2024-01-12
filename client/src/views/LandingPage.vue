@@ -20,14 +20,14 @@
   <div id="wrapped-btn">
     <v-btn color='primary' :disabled="isBtnDisabled" :loading="loading" @click="fetchBookDetails">Wrapped</v-btn>
     <v-dialog v-model="loading" width="400" :scrim="false" persistent>
-    <v-card color="white">
+    <v-card color="primary" variant="outlined">
       <v-card-text>
-        Please be patient as we are parsing your Goodreads Data.This process may take upto 2-3 minutes.
-        <v-progress-linear
-            indeterminate
-            color=primary
-          ></v-progress-linear>
+        Please be patient as we are parsing your Goodreads Data. This process may take upto 2-3 minutes.
       </v-card-text>
+      <v-progress-linear
+          indeterminate
+          color=primary
+        ></v-progress-linear>
     </v-card>
     </v-dialog>
   </div>
@@ -117,4 +117,14 @@ const fetchBookDetails = async () => {
   font-size: 12px;
  }
 }
+</style>
+
+<style scoped>
+ .v-card{
+  background-color: white;
+ }
+
+ .v-card-text{
+  font-size: 10px;
+ }
 </style>

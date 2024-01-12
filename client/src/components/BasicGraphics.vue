@@ -49,8 +49,8 @@
     const totalbooks = wrappedData.totalbooksread;
     const minutesspentreading = convertPagesToMinutes();
     const highestBookCovers = getBooksCover(4, 'bookcover', sortBooks('rating'));
-    const [mostReadAuthor] = getUniqueAuthors();
-    const [top5Genre] = getMostReadGenres();
+    const [mostReadAuthor] = getUniqueAuthors()[1];
+    const top5Genre = getMostReadGenres()[1];
     const avgrating = getAverage('rating');
 
     function generatePNG(){
@@ -58,7 +58,6 @@
 
         const width = 1080;
         const height = 1920;
-
         const scale = Math.min(width / parentElement.offsetWidth, height / parentElement.offsetHeight);
 
         html2canvas(parentElement, {useCORS: true, scale}).then((canvas) => {

@@ -68,7 +68,8 @@ class BookDetails():
             genre = self.get_genres(booklink)
             #create book object
 
-            obj_name = { 'title': title,
+            obj_name = {
+            'title': title,
             'author': author,
             'page': page,
             'rating': rating,

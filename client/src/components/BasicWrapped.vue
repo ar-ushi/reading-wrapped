@@ -8,7 +8,7 @@
             <v-stepper-window-item :value="8">
                 <h4 class="text-secondary" style="padding-bottom: 10px;">On some days, you agreed with all the rage on Goodreads!</h4>
                 <book-opinions :items="categoriseByPopularOpinion"/>
-                <h4 class="padding-top-1rem text-secondary">On other days, you held opinions strictly against the crowd.</h4>
+                <h4 class="padding-top-1rem text-secondary">On othersd, you held opinions strictly against the crowd.</h4>
                 <book-opinions :items="categoriseByUnpopularOpinion" />
             </v-stepper-window-item>
             <v-stepper-window-item :value="9" :key="`9--content`">
@@ -37,7 +37,7 @@ import { convertPagesToMinutes, convertMinutesToDays, getBooksCover, sortBooks, 
     const minutesspentreading = convertPagesToMinutes();
     const daysspentreading = convertMinutesToDays(minutesspentreading);
     const avgrating = getAverage('rating');
-    const avgpageread = getAverage('page');
+    const avgpageread = parseFloat(getAverage('page'));
     const longBookCovers = getBooksCover(4, 'bookcover', sortBooks('page'));
     const highestRatedBookCovers = getBooksCover(5, 'bookcover', sortBooks('rating'))
     const [categoriseByPopularOpinion, categoriseByUnpopularOpinion] = groupPopularOpinion();
@@ -85,24 +85,24 @@ import { convertPagesToMinutes, convertMinutesToDays, getBooksCover, sortBooks, 
             }
             return res; 
         }, {'4' : [], '3': [], '2': [], 'unpopular': []})
+        let usedIndicesPopular = [];
+        let usedIndicesUnpopular = [];
         while (finalPopularResult.length < 3){
-            let usedIndices = [];
-            do {
+             do {
                 randomBook = Math.floor(Math.random() * (popularOpinions[bucket].length))
-            } while (usedIndices.includes(randomBook));
+            } while (usedIndicesPopular.includes(randomBook));
             if (popularOpinions[bucket][randomBook]){
                 finalPopularResult.push(popularOpinions[bucket][randomBook])
             }
-            usedIndices.push(randomBook);
+            usedIndicesPopular.push(randomBook);
             bucket = bucket === '4' ? '3' : bucket === '3' ? '2' : '4'
         }
         while (finalUnpopularResult.length < 3){
-            let usedIndices = [];
             do {
             randomBook = Math.floor(Math.random() * (popularOpinions['unpopular'].length))
-            } while (usedIndices.includes(randomBook));
+            } while (usedIndicesUnpopular.includes(randomBook));
             finalUnpopularResult.push(popularOpinions['unpopular'][randomBook]);
-            usedIndices.push(randomBook);
+            usedIndicesUnpopular.push(randomBook);
         }
         return [finalPopularResult, finalUnpopularResult];
     }
