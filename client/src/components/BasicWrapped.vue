@@ -5,12 +5,12 @@
             <v-stepper-window-item v-for="(phrase, i) in stepperPhrases" :value="i+1" :key="`${i}--content`">
             <v-card v-html="phrase" color="transparent"></v-card>
             </v-stepper-window-item>
-            <v-stepper-window-item :value="8">
+            <!-- <v-stepper-window-item :value="8">
                 <h4 class="text-secondary" style="padding-bottom: 10px;">On some days, you agreed with all the rage on Goodreads!</h4>
                 <book-opinions :items="categoriseByPopularOpinion"/>
                 <h4 class="padding-top-1rem text-secondary">On othersd, you held opinions strictly against the crowd.</h4>
                 <book-opinions :items="categoriseByUnpopularOpinion" />
-            </v-stepper-window-item>
+            </v-stepper-window-item> -->
             <v-stepper-window-item :value="9" :key="`9--content`">
                 <basic-graphics />
             </v-stepper-window-item>
@@ -40,7 +40,7 @@ import { convertPagesToMinutes, convertMinutesToDays, getBooksCover, sortBooks, 
     const avgpageread = parseFloat(getAverage('page'));
     const longBookCovers = getBooksCover(4, 'bookcover', sortBooks('page'));
     const highestRatedBookCovers = getBooksCover(5, 'bookcover', sortBooks('rating'))
-    const [categoriseByPopularOpinion, categoriseByUnpopularOpinion] = groupPopularOpinion();
+    //const [categoriseByPopularOpinion, categoriseByUnpopularOpinion] = groupPopularOpinion();
     const [totalAuthorsRead, mostReadAuthor, mostReadBooksByAuthor] = getUniqueAuthors();
     const [countOfTotalGenres,top5Genre] = getMostReadGenres();
     const avgratingtext = () => {
@@ -64,48 +64,48 @@ import { convertPagesToMinutes, convertMinutesToDays, getBooksCover, sortBooks, 
         `Speaking of stealing your heart, you read a whopping total of <span class="text-secondary font-bold">${countOfTotalGenres} </span> unique genres this year. <div class='flx-col'> <h2 class="text-secondary">Top 5 Genres </h2> ${(top5Genre as string[]).map((genre: string) => `<span class="font-bold"> ${genre} </span>`).join('')} </div>`
     ]
 
-    function groupPopularOpinion(){
-        let key1 = 'rating';
-        let key2 = 'avgrating'
-        let books = toRaw(wrappedData.books);
-        let bucket = '4';
-        let finalPopularResult = [];
-        let finalUnpopularResult = [];
-        let randomBook;
+    // function groupPopularOpinion(){
+    //     let key1 = 'rating';
+    //     let key2 = 'avgrating'
+    //     let books = toRaw(wrappedData.books);
+    //     let bucket = '4';
+    //     let finalPopularResult = [];
+    //     let finalUnpopularResult = [];
+    //     let randomBook;
         
-        const popularOpinions = books.reduce((res, book) => {
-            if (book[key1]>= 3.7 && book[key2] >=3.7){
-                res['4'].push(book);
-            } else if (book[key1] >= 3 && book[key1] < 3.7 && book[key2] >= 3 && book[key2] < 3.7){
-                res['3'].push(book)
-            } else if (book[key1] <=2 && book[key2] <=2) {
-                res['2'].push(book);
-            } else {
-                res['unpopular'].push(book);
-            }
-            return res; 
-        }, {'4' : [], '3': [], '2': [], 'unpopular': []})
-        let usedIndicesPopular = [];
-        let usedIndicesUnpopular = [];
-        while (finalPopularResult.length < 3){
-             do {
-                randomBook = Math.floor(Math.random() * (popularOpinions[bucket].length))
-            } while (usedIndicesPopular.includes(randomBook));
-            if (popularOpinions[bucket][randomBook]){
-                finalPopularResult.push(popularOpinions[bucket][randomBook])
-            }
-            usedIndicesPopular.push(randomBook);
-            bucket = bucket === '4' ? '3' : bucket === '3' ? '2' : '4'
-        }
-        while (finalUnpopularResult.length < 3){
-            do {
-            randomBook = Math.floor(Math.random() * (popularOpinions['unpopular'].length))
-            } while (usedIndicesUnpopular.includes(randomBook));
-            finalUnpopularResult.push(popularOpinions['unpopular'][randomBook]);
-            usedIndicesUnpopular.push(randomBook);
-        }
-        return [finalPopularResult, finalUnpopularResult];
-    }
+    //     const popularOpinions = books.reduce((res, book) => {
+    //         if (book[key1]>= 3.7 && book[key2] >=3.7){
+    //             res['4'].push(book);
+    //         } else if (book[key1] >= 3 && book[key1] < 3.7 && book[key2] >= 3 && book[key2] < 3.7){
+    //             res['3'].push(book)
+    //         } else if (book[key1] <=2 && book[key2] <=2) {
+    //             res['2'].push(book);
+    //         } else {
+    //             res['unpopular'].push(book);
+    //         }
+    //         return res; 
+    //     }, {'4' : [], '3': [], '2': [], 'unpopular': []})
+    //     let usedIndicesPopular = [];
+    //     let usedIndicesUnpopular = [];
+    //     while (finalPopularResult.length < 3){
+    //          do {
+    //             randomBook = Math.floor(Math.random() * (popularOpinions[bucket].length))
+    //         } while (usedIndicesPopular.includes(randomBook));
+    //         if (popularOpinions[bucket][randomBook]){
+    //             finalPopularResult.push(popularOpinions[bucket][randomBook])
+    //         }
+    //         usedIndicesPopular.push(randomBook);
+    //         bucket = bucket === '4' ? '3' : bucket === '3' ? '2' : '4'
+    //     }
+    //     while (finalUnpopularResult.length < 3){
+    //         do {
+    //         randomBook = Math.floor(Math.random() * (popularOpinions['unpopular'].length))
+    //         } while (usedIndicesUnpopular.includes(randomBook));
+    //         finalUnpopularResult.push(popularOpinions['unpopular'][randomBook]);
+    //         usedIndicesUnpopular.push(randomBook);
+    //     }
+    //     return [finalPopularResult, finalUnpopularResult];
+    // }
 </script>
 
 <style scoped>

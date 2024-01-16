@@ -5,7 +5,7 @@ export interface BookDetails {
  'avgrating': string,
  'booklink': string,
  'bookcover' : string,
- 'genre': string   
+ 'readcount': string 
 }
 
 export interface WrappedDetails{

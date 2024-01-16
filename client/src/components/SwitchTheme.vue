@@ -38,8 +38,8 @@
             root.style.setProperty('background-color', '#000000');
         } else{
             theme.global.name.value='light'
-            root.style.removeProperty('color');
-            root.style.removeProperty('background-color');
+            root.style.setProperty('color', '#000000');
+            root.style.setProperty('background-color', '#ffffff');
         }
     })
 </script>

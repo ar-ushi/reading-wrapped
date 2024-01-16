@@ -65,7 +65,7 @@ class BookDetails():
             booklink = 'https://www.goodreads.com' + book_rows.find_next('td', class_=f'field cover').find('a')['href']
             bookcover_comp = book_rows.find_next('td', class_=f'field cover').find('img')['src']
             bookcover = re.sub(r'\.(?:_SY|_SX)\d+_', '', bookcover_comp)
-            genre = self.get_genres(booklink)
+            #genre = self.get_genres(booklink)
             #create book object
 
             obj_name = {
@@ -76,7 +76,7 @@ class BookDetails():
             'avgrating': avgrating,
             'booklink': booklink,
             'bookcover': bookcover,
-            'genre' : genre,
+            #'genre' : genre,
             'readcount' : readcount
             }
             self.store_book_details['books'].append(obj_name)

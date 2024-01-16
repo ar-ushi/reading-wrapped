@@ -109,6 +109,7 @@ const fetchBookDetails = async () => {
 }
   .v-select{
     max-width: 70px !important;
+    min-width: 10%;
   }
   .v-text-field{
     max-width: 40%;
