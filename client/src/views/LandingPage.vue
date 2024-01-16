@@ -14,7 +14,7 @@
     </p>
     <div class="input-container">
       <v-select variant="underlined" label="Reading Year" v-model="selectedYear" :items="yearOptions"></v-select>
-      <v-text-field variant="underlined" validate-on="input lazy" :rules=[validateInput] v-model="uid" label="www.goodreads.com/review/list/" placeholder="########" persistent-placeholder></v-text-field>
+      <v-text-field variant="underlined" validate-on=lazy :rules=[validateInput] v-model="uid" label="www.goodreads.com/review/list/" placeholder="########" persistent-placeholder></v-text-field>
     </div>
   </div>
   <div id="wrapped-btn">
@@ -63,18 +63,27 @@ const generateYearsForWrapped = () => {
 
 onMounted(generateYearsForWrapped);
 
-const validateInput = (value:string) => {
-  if (value.length === 8){
-    isBtnDisabled.value = false
+const validateInput = async (value:string) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:5000/validate_users?uid=${value}`)
+    if (response.status === 200){
+      const data = await response.json()
+      if (!data.Status){
+        return data.Message
+      }
+      isBtnDisabled.value = false
     return true
-  }
+    }
   return 'Account ID must be of 8 digits'
+  } catch (error) {
+    console.error('Error Fetching Data:', error) 
+  }
 }
 
 const fetchBookDetails = async () => {
   try {
     loading.value = !loading.value;
-    const response = await fetch(`http://127.0.0.1:5000/wrapped?gr_user_id=${uid.value}&year=${selectedYear.value}`);
+    const response = await fetch(`http://127.0.0.1:5000/wrapped?uid=${uid.value}&year=${selectedYear.value}`);
     if (response.status === 200){
       const data = await response.json();
       //update global state
