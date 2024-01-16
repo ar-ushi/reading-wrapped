@@ -88,7 +88,7 @@ class BookDetails():
 
     async def get_genres(self, booklink):
         forbidden_genres = ['Fiction', 'Nonfiction', 'Short Stories', 'Anthology', 'Adult']
-        res = await requests.get(booklink)
+        res = await self.parse_book_info_html(booklink)
         if (res.status_code == 200):
             intended_class = 'BookPageMetadataSection__genres'
             parse_only= SoupStrainer(class_= intended_class)
