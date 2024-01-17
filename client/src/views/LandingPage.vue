@@ -14,7 +14,7 @@
     </p>
     <div class="input-container">
       <v-select variant="underlined" label="Reading Year" v-model="selectedYear" :items="yearOptions"></v-select>
-      <v-text-field variant="underlined" validate-on=lazy :rules=[validateInput] v-model="uid" label="www.goodreads.com/review/list/" placeholder="########" persistent-placeholder></v-text-field>
+      <v-text-field variant="underlined" validate-on="lazy" :rules=[validateInput] v-model="uid" label="www.goodreads.com/review/list/" placeholder="########" persistent-placeholder></v-text-field>
     </div>
   </div>
   <div id="wrapped-btn">
