@@ -8,6 +8,7 @@ from wrapped.validate_users import Users
 async def fetch_goodreads_data(request: HttpRequest):
     id = request.GET['uid']
     year= request.GET['year']
+    
     bd = BookDetails(19117004, 2022)
     readingstats = await bd.get_parsed_html()
     return JsonResponse(readingstats)

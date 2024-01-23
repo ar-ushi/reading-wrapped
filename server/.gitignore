@@ -1,3 +1,5 @@
 venv
 server/__pycache__
 wrapped/__pycache__
+.env
+wrapped/migrations/__pycache__
