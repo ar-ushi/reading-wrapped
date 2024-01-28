@@ -1,12 +1,10 @@
 from django.db import models
-from django.forms import JSONField
 
 # Create your models here.
 class BookData(models.Model):
     uid = models.PositiveIntegerField()
     year = models.PositiveIntegerField(unique=True)
-    yearlystats = JSONField()
+    readingstats = models.JSONField(default = dict)
 
     class Meta:
-        unique_together = ('userid', 'year')
-    
+        unique_together = ('uid', 'year')

@@ -65,7 +65,7 @@ onMounted(generateYearsForWrapped);
 
 const validateInput = async (value:string) => {
   try {
-    const response = await fetch(`http://127.0.0.1:5000/validate_users?uid=${value}`)
+    const response = await fetch(`http://127.0.0.1:8000/wrapped/validateID?uid=${value}`)
     if (response.status === 200){
       const data = await response.json()
       if (!data.Status){
@@ -83,7 +83,7 @@ const validateInput = async (value:string) => {
 const fetchBookDetails = async () => {
   try {
     loading.value = !loading.value;
-    const response = await fetch(`http://127.0.0.1:5000/wrapped?uid=${uid.value}&year=${selectedYear.value}`);
+    const response = await fetch(`http://127.0.0.1:8000/wrapped/yearlystats?uid=${uid.value}&year=${selectedYear.value}`);
     if (response.status === 200){
       const data = await response.json();
       //update global state
