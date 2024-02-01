@@ -1,6 +1,4 @@
 from pathlib import Path
-from dotenv import load_dotenv
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,21 +7,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-pdg05#j155hirs1e0o^ei44s-%b)m$pawe4(%e*(2qk)v$msbr'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
-load_dotenv()
 
 INSTALLED_APPS = [
-    'wrapped',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders'
+    'corsheaders',
+    'wrapped',
 ]
 
 MIDDLEWARE = [
@@ -64,19 +60,6 @@ WSGI_APPLICATION = 'server.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'reading_wrapped',
-        'USER': 'postgres',
-        'PASSWORD': os.getenv('DB_ENV'),
-        'HOST' : 'localhost',
-        'PORT': '5432'
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 

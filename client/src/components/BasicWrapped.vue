@@ -39,6 +39,7 @@ import { convertPagesToMinutes, convertMinutesToDays, getBooksCover, sortBooks, 
     const avgrating = getAverage('rating');
     const avgpageread = parseFloat(getAverage('page'));
     const longBookCovers = getBooksCover(4, 'bookcover', sortBooks('page'));
+    console.log(sortBooks('page'))
     const highestRatedBookCovers = getBooksCover(5, 'bookcover', sortBooks('rating'))
     //const [categoriseByPopularOpinion, categoriseByUnpopularOpinion] = groupPopularOpinion();
     const [totalAuthorsRead, mostReadAuthor, mostReadBooksByAuthor] = getUniqueAuthors();

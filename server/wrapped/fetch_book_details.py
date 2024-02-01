@@ -53,19 +53,19 @@ class BookDetails():
         self.store_book_details['totalbooksread'] += len(date_read_rows)
         tasks = []
         for i, book_rows in enumerate(date_read_rows):
-            self.rows = book_rows
+            # self.rows = book_rows
             tasks.append(self.fetch_book_details(book_rows, i))
         await asyncio.gather(*tasks)
     
-    async def fetch_book_details(self, book_rows, i):
+    async def fetch_book_details(self, book, i):
         obj_name = str(i)
-        title=self.format_element('title', tag='a')
-        author= self.format_element('author',tag='a')
-        readcount = self.format_element('read_count')
-        page = int(re.findall(r'\d+', self.format_element('num_pages'))[0])
+        title=self.format_element(book, 'title', tag='a')
+        author= self.format_element(book,'author',tag='a')
+        readcount = self.format_element(book,'read_count')
+        page = int(re.findall(r'\d+', self.format_element(book,'num_pages'))[0])
         rating= self.map_rating()            
-        avgrating = float(self.format_element('avg_rating'))
-        booklink = 'https://www.goodreads.com' + book_rows.find_next('td', class_=f'field cover').find('a')['href']
+        avgrating = float(self.format_element(book,'avg_rating'))
+        booklink = 'https://www.goodreads.com' + book.find_next('td', class_=f'field cover').find('a')['href']
         bookcover_comp = book_rows.find_next('td', class_=f'field cover').find('img')['src']
         bookcover = re.sub(r'\.(?:_SY|_SX)\d+_', '', bookcover_comp)
         genre = await self.get_genres(booklink)
@@ -117,5 +117,5 @@ class BookDetails():
         str_rating = self.format_element('rating')
         return rating_map[str_rating]
     
-    def format_element(self,class_name, tag='div'):
-        return self.rows.find_next('td', class_=f'field {class_name}').find(tag).text.strip()
+    def format_element(self,book,class_name, tag='div'):
+        return book.find_next('td', class_=f'field {class_name}').find(tag).text.strip()

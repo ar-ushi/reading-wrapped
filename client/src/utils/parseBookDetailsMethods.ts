@@ -1,3 +1,4 @@
+import { toRaw } from "vue";
 import { WrappedDetails } from "./interface";
 
 let wrappedData: WrappedDetails;
@@ -16,7 +17,7 @@ export function convertMinutesToDays(minutes: number) {
 }
 
 export function sortBooks(key: string){
-    let books = wrappedData.books;
+    let books = toRaw(wrappedData.books);
     return (books).sort((a,b) => b[key] - a[key])
 }
 
