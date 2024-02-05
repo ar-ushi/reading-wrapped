@@ -32,25 +32,26 @@
     </v-dialog>
   </div>
   </div>
+  <reading-footer />
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import {useWrappedStore} from '../store/store';
+import ReadingFooter from './components/ReadingFooter.vue';
 
-const selectedYear = ref(2023);
+const selectedYear = ref();
 const yearOptions = ref([] as { title: string; value: number }[]);
 const uid = ref('');
 const isBtnDisabled = ref(true);
 const loading = ref(false);
 const router = useRouter();
-const store = useWrappedStore()
+const store = useWrappedStore();
+const date = new Date();
+const currYear: number = date.getFullYear();
 
 const generateYearsForWrapped = () => {
-  const date = new Date();
-  const currMonth: number = date.getMonth();
-  const currYear: number = currMonth === 11 ? date.getFullYear() : date.getFullYear() - 1;
   const years = [];
 
   for (let i = currYear; i >= currYear - 5; i--) {
@@ -87,11 +88,18 @@ const fetchBookDetails = async () => {
     if (response.status === 200){
       const data = await response.json();
       //update global state
-      store.updateWrappedData(data);
-      router.push({
+      if (selectedYear.value !== currYear || date.getMonth() === 11){
+        router.push({
         name: 'Wrapped',
         params: {uid: uid.value }
       })
+      } else{ //current year selected & it's not december
+      store.updateWrappedData(data);
+      router.push({
+          name: 'Reading Status',
+          params: {uid: uid.value}
+        })
+      }
     }
   } catch (error) {
     console.error('Error Fetching Data:', error)

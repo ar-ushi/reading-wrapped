@@ -12,3 +12,5 @@ todo - books where user agreed with the avg rating (3 == 3, 1/2 == 1/2, 4/5 == 4
 
 todo - add styling for v-dialo and add transition for the phrases
 todo - add wrapped
+
+error handling for user not going via landing page flow
