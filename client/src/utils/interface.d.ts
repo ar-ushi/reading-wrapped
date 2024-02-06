@@ -5,13 +5,14 @@ export interface BookDetails {
  'avgrating': string,
  'booklink': string,
  'bookcover' : string,
- 'readcount': string 
+ 'readcount': string,
+ 'month' : string
 }
 
 export interface WrappedDetails{
     'username' : string,
-    'totalpagesread': string,
-    'totalbooksread': string,
+    'totalpagesread'?: string,
+    'totalbooksread'?: string,
     'month': string[],
     'books': BookDetails[]
 }

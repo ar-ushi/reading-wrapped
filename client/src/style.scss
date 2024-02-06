@@ -41,9 +41,18 @@ body {
   min-height: 100vh;
 }
 
+.no-font-weight{
+  font-weight: 400;
+} 
+
 .flx-dis{
   display: flex;
   justify-content: center;
+}
+
+.flx-flx-end{
+  display: flex;
+  justify-content: flex-end;
 }
 
 .flx-col{
@@ -58,6 +67,11 @@ body {
 .flx-space-evenly{
   display: flex;
   justify-content: space-evenly;
+}
+
+.flx-space-btwn{
+  display: flex;
+  justify-content: space-between;
 }
 h1 {
   font-size: 3.2em;

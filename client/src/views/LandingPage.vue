@@ -8,6 +8,7 @@
     <p>
       To get started, kindly copy and paste the ID of your account on Goodreads.
       You can find it <a href="https://www.goodreads.com/review/list/">here</a>.
+      <br>
       <span class="url-help">
         The URL should have a format similar to: goodreads.com/review/list/### where ### is the account id.
       </span>
@@ -39,7 +40,7 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import {useWrappedStore} from '../store/store';
-import ReadingFooter from './components/ReadingFooter.vue';
+import ReadingFooter from '../components/ReadingFooter.vue';
 
 const selectedYear = ref();
 const yearOptions = ref([] as { title: string; value: number }[]);
@@ -88,13 +89,13 @@ const fetchBookDetails = async () => {
     if (response.status === 200){
       const data = await response.json();
       //update global state
+      store.updateWrappedData(data);
       if (selectedYear.value !== currYear || date.getMonth() === 11){
         router.push({
         name: 'Wrapped',
         params: {uid: uid.value }
       })
       } else{ //current year selected & it's not december
-      store.updateWrappedData(data);
       router.push({
           name: 'Reading Status',
           params: {uid: uid.value}

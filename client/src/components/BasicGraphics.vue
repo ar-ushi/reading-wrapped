@@ -77,9 +77,7 @@
   justify-content: space-around;
 }
 
-.no-font-weight{
-    font-weight: 400;
-}
+
 @media (max-width: 768px) {
     .grid:nth-child(2){
         justify-content: space-between;

@@ -8,7 +8,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: CurrentReadingStatus,
+    component: LandingPage,
   },
   {
     path: '/wrapped/:uid',

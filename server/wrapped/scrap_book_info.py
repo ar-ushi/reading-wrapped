@@ -46,6 +46,8 @@ def areAllBooksLoaded(driver):
     
 #generic function to process_read_books
 async def process_read_books(capture_genres = False):
+    global books_info
+    books_info = []
     date_read_rows = []
     for element in soup.select(f'.date_read_value:-soup-contains("{year}")'):
         date_read_rows.append(element.find_parent('tr'))

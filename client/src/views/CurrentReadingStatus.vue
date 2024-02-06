@@ -1,14 +1,14 @@
 <template>
     <div class="container">
-        <div v-if="booksread != 0">
-            <h1>aru's books read this year</h1>
+        <div v-if="totalBooksRead != 0">
+            <h1>{{ username }}'s books read this year</h1>
             <div>
                 <div v-for="rowIndex in gridNumber" :key="rowIndex" class="flx-dis">
                     <div v-for="colIndex in gridNumber" :key="colIndex" class="flx-col space-grid">
                         <img 
-                            v-if="(rowIndex - 1) * gridNumber + colIndex <= booksread"
+                            v-if="(rowIndex - 1) * gridNumber + colIndex <= totalBooksRead"
                             class="grid-book-covers"
-                            src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1647789287i/60177373.jpg"
+                            :src="monthly[(rowIndex-1)*gridNumber+colIndex-1].bookcover"
                         />
                         <div v-else class="grey-block grid-book-covers">{{ (rowIndex - 1) * gridNumber + colIndex }}</div>
                     </div>
@@ -21,32 +21,40 @@
         </div>
         <hr style="margin-top: 1.5rem;">
         <h2>Monthly Wrapped</h2>
-        <div class="flx-dis">
-            <v-select variant="underlined" label="Months" v-model="selectedMonth" :items="monthOptions"></v-select>
+        <div class="flx-flx-end">
+            <v-select multiple variant="underlined" label="Months" v-model="selectedMonth" :items="monthOptions"></v-select>
         </div>
-        <!-- <div class="flx">
-            <h2 class="text-secondary">Total Books Read</h2>
+        <div class="flx-space-btwn">
+            <h2 class="text-info">Total Books Read</h2>
             <h2 class="no-font-weight">{{ monthlystats.totalBooks }}</h2>
         </div>
-        <div class="flx">
-            <h2 class="text-secondary">Total Pages Read</h2>
+        <div class="flx-space-btwn">
+            <h2 class="text-info">Total Pages Read</h2>
             <h2 class="no-font-weight">{{ monthlystats.totalPages }}</h2>
         </div>
-        <div class="flx">
-            <h2 class="text-success">Average Rating</h2>
+        <div class="flx-space-btwn">
+            <h2 class="text-info">Average Rating</h2>
             <h2 class="no-font-weight">{{ (monthlystats.totalRating/monthlystats.totalBooks).toPrecision(2)}}</h2>
-        </div> -->
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue';
-import { ref } from 'vue';
+    import { watch } from 'vue';
+    import { ref } from 'vue';
+    import { useWrappedStore } from '../store/store';
+    import { WrappedDetails } from '../utils/interface';
+    import { toRaw } from 'vue';
 
+    const store = useWrappedStore();
+    const monthlyData = ref(store.getWrappedData);
+    const username = (monthlyData.value as WrappedDetails).username;
+    const monthly = toRaw((monthlyData.value as WrappedDetails).books);
     const selectedMonth = ref();
     const monthOptions= ref([])
-    let booksread = 5;
-    const gridNumber = Math.ceil(Math.sqrt(booksread))
+    const currMonth = new Date().getMonth()
+    const totalBooksRead = monthly.length
+    const gridNumber = Math.ceil(Math.sqrt(totalBooksRead))
     const monthsRef = {
     'January': 'Jan',
     'February': 'Feb',
@@ -61,31 +69,36 @@ import { ref } from 'vue';
     'November': 'Nov',
     'December': 'Dec'
     };
-    monthOptions.value = Object.keys(monthsRef)
+    
+    monthOptions.value = Object.keys(monthsRef).map((month, i) => {
+        if (i > currMonth){
+            return {title: month, props: {disabled: true}}
+        } else{
+            return {title: month}
+        }
+    })
     selectedMonth.value = 'January'
 
-    // const monthlystats = ref({ totalBooks: 0, totalPages: 0, totalRating: 0 });
+    const monthlystats = ref({ totalBooks: 0, totalPages: 0, totalRating: 0 });
 
-    // const calculateMonthlyStats = () => {
-    // monthlystats.value = monthly.books.reduce((sum, item) => {
-    //     if (item.month === monthsRef[selectedMonth.value]) {
-    //     sum.totalBooks += 1;
-    //     sum.totalPages += item.page;
-    //     sum.totalRating += item.rating;
-    //     }
-    //     return sum;
-    // }, { totalBooks: 0, totalPages: 0, totalRating: 0 });
-    // };
+    const calculateMonthlyStats = () => {
+    monthlystats.value = monthly.reduce((sum, item) => {
+        if (item.month === monthsRef[selectedMonth.value]) {
+        sum.totalBooks += 1;
+        sum.totalPages += parseInt(item.page);
+        sum.totalRating += parseInt(item.rating);
+        }
+        return sum;
+    }, { totalBooks: 0, totalPages: 0, totalRating: 0 });
+    };
 
-    // // Initial calculation
-    // calculateMonthlyStats();
+    // Initial calculation
+    calculateMonthlyStats();
 
-    // // Watcher for selectedMonth changes
-    // watch(selectedMonth, () => {
-    // calculateMonthlyStats();
-    // });
-
-
+    // Watcher for selectedMonth changes
+    watch(selectedMonth, () => {
+    calculateMonthlyStats();
+    });
 </script>
 
 <style>
@@ -94,9 +107,8 @@ import { ref } from 'vue';
     min-width: 10%;
   }
 .grid-book-covers{
-    height:70px;
-    width:50px;
-    border-radius: 5px;
+    height:80px;
+    width:60px;
 }
 
 .grey-block{
@@ -111,5 +123,10 @@ import { ref } from 'vue';
 .space-grid{
     margin-right: 1rem;
     margin-top: 0.5rem
+}
+
+.v-menu>.v-overlay__content>.v-card, .v-menu>.v-overlay__content>.v-list, .v-menu>.v-overlay__content>.v-sheet {
+    background-color: rgb(var(--v-theme-background));
+    color: rgb(var(--v-theme-book));
 }
 </style>
