@@ -65,9 +65,9 @@ const generateYearsForWrapped = () => {
 
 onMounted(generateYearsForWrapped);
 
-const validateInput = async (value:string) => {
+const validateID = async (uid: string) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/wrapped/validateID?uid=${value}`)
+    const response = await fetch(`http://127.0.0.1:8000/wrapped/validateID?uid=${uid}`)
     if (response.status === 200){
       const data = await response.json()
       if (!data.Status){
@@ -81,6 +81,22 @@ const validateInput = async (value:string) => {
     console.error('Error Fetching Data:', error) 
   }
 }
+
+function debounce(func, delay= 3000){
+  let timeoutid;
+  return function(...args){
+    clearTimeout(timeoutid);
+    timeoutid = setTimeout(() =>{
+      func.call(this, ...args)
+    }, delay)
+  }
+}
+
+const debounceValidateID = debounce(validateID)
+
+const validateInput = (value) =>{
+  return debounceValidateID(value);
+};
 
 const fetchBookDetails = async () => {
   try {
