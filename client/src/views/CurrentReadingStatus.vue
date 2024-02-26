@@ -1,5 +1,29 @@
 <template>
     <div class="container">
+        <h3>Monthly Wrapped</h3>
+        <div class="flx-flx-end">
+            <v-select multiple variant="underlined" label="Months" v-model="selectedMonth" :items="monthOptions"></v-select>
+        </div>
+        <semicircle-progress></semicircle-progress>
+        <v-progress-circular
+            :size="50"
+            :width="20"
+            :value="(monthlystats.totalRating/monthlystats.totalBooks).toPrecision(2)"
+            color="primary"
+          >
+            <span>{{ (monthlystats.totalRating/monthlystats.totalBooks).toPrecision(2)}}</span>
+          </v-progress-circular>        <div class="flx-space-btwn">
+            <h2 class="text-info">Total Books Read</h2>
+            <h2 class="no-font-weight">{{ monthlystats.totalBooks }}</h2>
+        </div>
+        <div class="flx-space-btwn">
+            <h2 class="text-info">Total Pages Read</h2>
+            <h2 class="no-font-weight">{{ monthlystats.totalPages }}</h2>
+        </div>
+        <div class="flx-space-btwn">
+            <h2 class="text-info">Average Rating</h2>
+            <h2 class="no-font-weight">{{ (monthlystats.totalRating/monthlystats.totalBooks).toPrecision(2)}}</h2>
+        </div>  
         <div v-if="totalBooksRead != 0">
             <h1>{{ username }}'s books read this year</h1>
             <div>
@@ -20,22 +44,7 @@
             <h4>It's never too late to pick up a book.</h4>
         </div>
         <hr style="margin-top: 1.5rem;">
-        <h2>Monthly Wrapped</h2>
-        <div class="flx-flx-end">
-            <v-select multiple variant="underlined" label="Months" v-model="selectedMonth" :items="monthOptions"></v-select>
-        </div>
-        <div class="flx-space-btwn">
-            <h2 class="text-info">Total Books Read</h2>
-            <h2 class="no-font-weight">{{ monthlystats.totalBooks }}</h2>
-        </div>
-        <div class="flx-space-btwn">
-            <h2 class="text-info">Total Pages Read</h2>
-            <h2 class="no-font-weight">{{ monthlystats.totalPages }}</h2>
-        </div>
-        <div class="flx-space-btwn">
-            <h2 class="text-info">Average Rating</h2>
-            <h2 class="no-font-weight">{{ (monthlystats.totalRating/monthlystats.totalBooks).toPrecision(2)}}</h2>
-        </div>
+        
     </div>
 </template>
 
@@ -45,6 +54,7 @@
     import { useWrappedStore } from '../store/store';
     import { WrappedDetails } from '../utils/interface';
     import { toRaw } from 'vue';
+    import SemicircleProgress from '../components/SemicircleProgress.vue';
 
     const store = useWrappedStore();
     const monthlyData = ref(store.getWrappedData);
