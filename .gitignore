@@ -1,1 +1,3 @@
-server2/
+.env
+.env.dev
+.env.prod

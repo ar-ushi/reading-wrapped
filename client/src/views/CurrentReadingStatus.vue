@@ -4,15 +4,10 @@
         <div class="flx-flx-end">
             <v-select multiple variant="underlined" label="Months" v-model="selectedMonth" :items="monthOptions"></v-select>
         </div>
-        <semicircle-progress></semicircle-progress>
-        <v-progress-circular
-            :size="50"
-            :width="20"
-            :value="(monthlystats.totalRating/monthlystats.totalBooks).toPrecision(2)"
-            color="primary"
-          >
-            <span>{{ (monthlystats.totalRating/monthlystats.totalBooks).toPrecision(2)}}</span>
-          </v-progress-circular>        <div class="flx-space-btwn">
+        <div class="flx-dis">
+            <semicircle-progress :rating=(monthlystats.totalRating/monthlystats.totalBooks).toPrecision(2)></semicircle-progress>
+        </div>
+       <div class="flx-space-btwn">
             <h2 class="text-info">Total Books Read</h2>
             <h2 class="no-font-weight">{{ monthlystats.totalBooks }}</h2>
         </div>
