@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+ <div class="container">
     <div id="main-page-header">
     <h1 class="text-secondary">Track Your Reading</h1>
     <h5>Supports Goodreads (for now!)</h5>
