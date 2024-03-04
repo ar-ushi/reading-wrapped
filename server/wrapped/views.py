@@ -20,17 +20,19 @@ async def fetch_goodreads_data(request: HttpRequest):
     else:
         bd = BookDetails(id, year)
         readingstats = await bd.get_parsed_html()
-
-        # try:
-        #     book_data = await sync_to_async(BookData.objects.get)(uid=id, year=year)
-        #     return JsonResponse(book_data.readingstats)
-        # except BookData.DoesNotExist: 
-        #     bd = BookDetails(id, year)
-        #     readingstats = await bd.get_parsed_html()
-        #     try:
-        #         await sync_to_async(BookData.objects.create)(uid=id, year=year, readingstats = readingstats)
-        #     except IntegrityError:
-        #         pass
+        try:
+            book_data = await sync_to_async(BookData.objects.get)(uid=id, year=year)
+            return JsonResponse(book_data.readingstats)
+        except BookData.DoesNotExist: 
+            print("adding to db")
+            bd = BookDetails(id, year)
+            readingstats = await bd.get_parsed_html()
+            try:
+                await sync_to_async(BookData.objects.create)(uid=id, year=year, readingstats = readingstats)
+                print("db baby")
+            except IntegrityError:
+                print("error")
+                
         return JsonResponse(readingstats)
 
 @require_http_methods(["GET"])

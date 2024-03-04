@@ -104,14 +104,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# load_dotenv()
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv("POSTGRES_DB"),
-#         'USER': os.getenv("POSTGRES_USER"),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-#         'HOST' : 'localhost',
-#         'PORT':os.getenv("POSTGRES_PORT")
-#     }
-# }
+load_dotenv()
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST' : 'localhost',
+        'PORT':os.getenv("POSTGRES_PORT")
+    }
+}
