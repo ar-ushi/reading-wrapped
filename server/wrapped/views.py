@@ -18,8 +18,6 @@ async def fetch_goodreads_data(request: HttpRequest):
         currentyeardetails = await bd.get_parsed_html()
         return JsonResponse(currentyeardetails)
     else:
-        bd = BookDetails(id, year)
-        readingstats = await bd.get_parsed_html()
         try:
             book_data = await sync_to_async(BookData.objects.get)(uid=id, year=year)
             return JsonResponse(book_data.readingstats)
